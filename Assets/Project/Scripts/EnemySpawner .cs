@@ -5,21 +5,17 @@ public class EnemySpawner : MonoBehaviour
     public LevelConfig levelConfig;
     public Transform player;
 
-    public float spawnInterval = 2f;
+    public float spawnInterval = 1f;
     public float spawnDistance = 10f;
-    public int maxEnemyAlive = 10; // 🔥 CHỐT CHẶN
 
-    private int enemyIndex = 0;
-    private int spawnedCount = 0;
+    private int enemyIndex = 0;   // đang spawn loại enemy nào
+    private int spawnedCount = 0; // đã spawn bao nhiêu con loại đó
     private float timer;
 
     void Update()
     {
         if (levelConfig == null || player == null) return;
-        if (enemyIndex >= levelConfig.enemies.Count) return;
-
-        if (EnemyManager.Instance.GetAliveCount() >= maxEnemyAlive)
-            return;
+        if (enemyIndex >= levelConfig.enemies.Count) return; // spawn xong toàn bộ level
 
         timer += Time.deltaTime;
 
@@ -34,22 +30,22 @@ public class EnemySpawner : MonoBehaviour
     {
         EnemySpawnInfo info = levelConfig.enemies[enemyIndex];
 
+        // Nếu đã spawn đủ số lượng của enemy hiện tại
         if (spawnedCount >= info.count)
         {
-            enemyIndex++;
+            enemyIndex++;      // chuyển sang enemy tiếp theo
             spawnedCount = 0;
             return;
         }
 
         Vector3 spawnPos = GetRandomPositionAroundPlayer();
 
-        GameObject enemy = Instantiate(
+        Instantiate(
             info.enemyData.prefab,
             spawnPos,
             Quaternion.identity
         );
 
-        EnemyManager.Instance.RegisterEnemy(enemy);
         spawnedCount++;
     }
 

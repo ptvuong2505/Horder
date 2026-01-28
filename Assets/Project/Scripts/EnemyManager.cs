@@ -1,22 +1,32 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyManager : MonoBehaviour
 {
-    public GameObject enemyPrefab;
-    public float timeBetweenSpawns = 0.5f;
-    private float currentTimeBetweenSpawns;
+    public static EnemyManager Instance;
 
-    public static EnemyManager instance;
+    private List<GameObject> aliveEnemies = new List<GameObject>();
 
-    private void Awake()
+    void Awake()
     {
-         if (instance == null)
-         {
-             instance = this;
-         }
-         else
-         {
-             Destroy(gameObject);
-        }
+        if (Instance == null)
+            Instance = this;
+        else
+            Destroy(gameObject);
+    }
+
+    public void RegisterEnemy(GameObject enemy)
+    {
+        aliveEnemies.Add(enemy);
+    }
+
+    public void UnregisterEnemy(GameObject enemy)
+    {
+        aliveEnemies.Remove(enemy);
+    }
+
+    public int GetAliveCount()
+    {
+        return aliveEnemies.Count;
     }
 }

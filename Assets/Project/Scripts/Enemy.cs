@@ -34,7 +34,7 @@ public class Enemy : MonoBehaviour
         anim.SetTrigger("Hit");
         if (currentHealth <= 0)
         {
-            Destroy(gameObject);
+            Die();
         }
     }
 
@@ -49,4 +49,11 @@ public class Enemy : MonoBehaviour
             );
         }
     }
+
+    void Die()
+    {
+        EnemyManager.Instance.UnregisterEnemy(gameObject);
+        Destroy(gameObject);
+    }
+
 }

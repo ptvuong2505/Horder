@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Enemy_Lv1
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   prefab: {fileID: 2476984947449450707, guid: 0c0b612a269947a448bad204e226393a, type: 3}
-  maxHealth: 100
+  hp: 100
   speed: 1

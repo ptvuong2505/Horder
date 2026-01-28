@@ -8,7 +8,7 @@ public class EnemySpawnInfo
     public int count;
 }
 
-[CreateAssetMenu(menuName = "Game/Level Config")]
+[CreateAssetMenu(fileName = "LevelConfig", menuName = "Game/Level Config")]
 public class LevelConfig : ScriptableObject
 {
     public List<EnemySpawnInfo> enemies;

@@ -683,11 +683,11 @@ PlayerSettings:
   captureStartupLogs: {}
   activeInputHandler: 1
   windowsGamepadBackendHint: 0
-  cloudProjectId: 30a12fc1-232b-4373-85e6-d2578732ca68
+  cloudProjectId: ff3eebd0-43b3-4e26-8b5a-1deb7ae5b566
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
   projectName: Horder
-  organizationId: ptvuong2505
+  organizationId: khanhpqde180310
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   hmiLoadingImage: {fileID: 0}

@@ -1,6 +1,8 @@
-using Unity.VisualScripting;
+﻿using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
+using System;
 
 public class Player :MonoBehaviour
 {
@@ -10,14 +12,26 @@ public class Player :MonoBehaviour
     Rigidbody2D rb;
 
     bool dead;
-    int maxHealth = 100;
-    int currentHealth;
+    public int maxHealth = 100;
+    public int currentHealth;
+
+    // Event khi HP thay đổi (HealthBar sẽ lắng nghe)
+    public event Action<int, int> OnHealthChanged; // (currentHP, maxHP)
+    
+    // Event khi Player chết
+    public event Action OnDeath;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         currentHealth = maxHealth;
+    }
+
+    void Start()
+    {
+        // Gửi HP ban đầu cho HealthBar
+        OnHealthChanged?.Invoke(currentHealth, maxHealth);
     }
 
     public void OnMove(InputAction.CallbackContext context)
@@ -35,6 +49,7 @@ public class Player :MonoBehaviour
         if (dead)
         {
             moveInput = Vector2.zero;
+            return;
         }
 
         if (moveInput.x != 0)
@@ -46,22 +61,48 @@ public class Player :MonoBehaviour
 
     private void FixedUpdate()
     {
-        rb.linearVelocity = moveInput * speed;
+        if (!dead)
+        {
+            rb.linearVelocity = moveInput * speed;
+        }
+        else
+        {
+            rb.linearVelocity = Vector2.zero;
+        }
     }
 
-    void Hit(int damage)
+    // PUBLIC - Enemy có thể gọi để gây sát thương
+    public void Hit(int damage)
     {
+        if (dead)
+            return; // Đã chết thì không nhận damage nữa
+
         animator.SetTrigger("hit");
         currentHealth -= damage;
-        if (currentHealth <= 0 && !dead)
+
+        // Thông báo HP thay đổi
+        OnHealthChanged?.Invoke(currentHealth, maxHealth);
+
+        if (currentHealth <= 0)
         {
             Die();
-            //animator.SetTrigger("die");
         }
     }
 
     void Die()
     {
         dead = true;
+        animator.SetTrigger("die");
+        
+        // Thông báo Player đã chết
+        OnDeath?.Invoke();
+
+        // Chờ 2 giây rồi chuyển sang scene Game Over
+        Invoke(nameof(LoadGameOverScene), 2f);
+    }
+
+    void LoadGameOverScene()
+    {
+        SceneManager.LoadScene("bg_game_over");
     }
 }

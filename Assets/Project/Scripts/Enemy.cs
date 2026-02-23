@@ -83,17 +83,17 @@ public class Enemy : MonoBehaviour
         Destroy(gameObject);
     }
 
-    void OnCollisionEnter2D(Collision2D collision)
+    void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Player"))
+        if (collision.CompareTag("Player"))
         {
             AttackPlayer(collision.gameObject);
         }
     }
 
-    void OnCollisionStay2D(Collision2D collision)
+    void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Player"))
+        if (collision.CompareTag("Player"))
         {
             if (Time.time >= lastAttackTime + attackCooldown)
             {

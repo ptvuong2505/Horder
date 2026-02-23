@@ -43,23 +43,7 @@ public class Player :MonoBehaviour
             
         }
     }
-
     private void Update()
-    {
-        if (dead)
-        {
-            moveInput = Vector2.zero;
-            return;
-        }
-
-        if (moveInput.x != 0)
-        {
-            var facingDirection = moveInput.x > 0 ? 1 : -1;
-            transform.localScale = new Vector2(facingDirection, 1);
-        }
-    }
-
-    private void FixedUpdate()
     {
         if (!dead)
         {

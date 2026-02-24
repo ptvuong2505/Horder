@@ -203,6 +203,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   maxHealth: 200
   speed: 3
+  damageToPlayer: 10
 --- !u!1 &5263340361090961652
 GameObject:
   m_ObjectHideFlags: 0

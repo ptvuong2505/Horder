@@ -57,8 +57,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c934cfa5711854242af3a03977682e85, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
-  levelConfig: {fileID: 0}
+  levelConfig: {fileID: 11400000, guid: 77a2d7ee0d95112439134a4d38e0d624, type: 2}
   player: {fileID: 0}
   spawnInterval: 2
   spawnDistance: 10
-  maxEnemyAlive: 100

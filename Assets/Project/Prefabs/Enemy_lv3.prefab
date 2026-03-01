@@ -103,6 +103,7 @@ GameObject:
   - component: {fileID: 2857168181393547069}
   - component: {fileID: 8295327984609861713}
   - component: {fileID: 7541594651144708479}
+  - component: {fileID: -3578887950499893543}
   m_Layer: 0
   m_Name: Enemy_lv3
   m_TagString: Enemy
@@ -187,8 +188,8 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.008030713, y: 0.008030713}
-  m_Radius: 0.38221586
+  m_Offset: {x: 0.008030713, y: 0.121388644}
+  m_Radius: 0.26885793
 --- !u!114 &7541594651144708479
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -200,10 +201,32 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fce9c0b16b0d3a24e9ca40cbd577dd65, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: '::'
+  m_EditorClassIdentifier: Assembly-CSharp::Enemy
   maxHealth: 200
   speed: 3
   damageToPlayer: 10
+--- !u!95 &-3578887950499893543
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2476984947449450707}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: e4f1bfa0cc7490145aaa7c60fc632353, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &5263340361090961652
 GameObject:
   m_ObjectHideFlags: 0

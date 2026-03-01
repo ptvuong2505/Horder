@@ -109,7 +109,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fce9c0b16b0d3a24e9ca40cbd577dd65, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: '::'
+  m_EditorClassIdentifier: Assembly-CSharp::Enemy
   maxHealth: 200
   speed: 3
   damageToPlayer: 10
@@ -264,7 +264,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 2
   m_MaskInteraction: 0
   m_Sprite: {fileID: -8987557684774062561, guid: d3952f6dd57a9cc4f82708c3f0053b48, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 0}

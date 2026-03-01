@@ -1,10 +1,8 @@
-﻿using Unity.VisualScripting;
+﻿using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
-using System;
 
-public class Player :MonoBehaviour
+public class Player : MonoBehaviour
 {
     private Vector2 moveInput;
     public float speed = 10f;
@@ -17,7 +15,7 @@ public class Player :MonoBehaviour
 
     // Event khi HP thay đổi (HealthBar sẽ lắng nghe)
     public event Action<int, int> OnHealthChanged; // (currentHP, maxHP)
-    
+
     // Event khi Player chết
     public event Action OnDeath;
 
@@ -36,11 +34,11 @@ public class Player :MonoBehaviour
 
     public void OnMove(InputAction.CallbackContext context)
     {
-        if(context.performed || context.canceled)
+        if (context.performed || context.canceled)
         {
             moveInput = context.ReadValue<Vector2>();
             animator.SetFloat("velocity", moveInput.magnitude);
-            
+
         }
     }
     private void Update()
@@ -72,21 +70,26 @@ public class Player :MonoBehaviour
             Die();
         }
     }
-
     void Die()
     {
         dead = true;
         animator.SetTrigger("die");
-        
+
         // Thông báo Player đã chết
         OnDeath?.Invoke();
 
-        // Chờ 2 giây rồi chuyển sang scene Game Over
-        Invoke(nameof(LoadGameOverScene), 2f);
+        // Báo GameManager xử lý Game Over
+        if (GameManager.Instance != null)
+            GameManager.Instance.TriggerGameOver();
+        else
+        {
+            // Fallback nếu không có GameManager
+            Invoke(nameof(LoadGameOverScene), 2f);
+        }
     }
 
     void LoadGameOverScene()
     {
-        SceneManager.LoadScene("bg_game_over");
+        UnityEngine.SceneManagement.SceneManager.LoadScene("bg_game_over");
     }
 }

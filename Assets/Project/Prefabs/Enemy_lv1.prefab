@@ -96,8 +96,8 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.008030713, y: 0.008030713}
-  m_Radius: 0.38221586
+  m_Offset: {x: -0.08807635, y: 0.07035521}
+  m_Radius: 0.22378433
 --- !u!114 &7541594651144708479
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -109,8 +109,8 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fce9c0b16b0d3a24e9ca40cbd577dd65, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: '::'
-  maxHealth: 200
+  m_EditorClassIdentifier: Assembly-CSharp::Enemy
+  maxHealth: 100
   speed: 3
   damageToPlayer: 10
 --- !u!1 &5263340361090961652
@@ -122,7 +122,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3118210498287172451}
-  - component: {fileID: 5617852006696418776}
   - component: {fileID: 3483536775118676150}
   m_Layer: 0
   m_Name: Sprites
@@ -147,28 +146,6 @@ Transform:
   - {fileID: 9222907492624721638}
   m_Father: {fileID: 8959789881102535209}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!95 &5617852006696418776
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5263340361090961652}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: cecef58a4c0e8af41857da17b47f3153, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!111 &3483536775118676150
 Animation:
   m_ObjectHideFlags: 0
@@ -264,7 +241,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 2
   m_MaskInteraction: 0
   m_Sprite: {fileID: -3525548655422949061, guid: d3952f6dd57a9cc4f82708c3f0053b48, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 0}

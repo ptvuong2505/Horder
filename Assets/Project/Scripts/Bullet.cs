@@ -29,6 +29,13 @@ public class Bullet : MonoBehaviour
                 enemy.Hit(damage);
             }
 
+            // Gây damage cho BossEnemy nếu có component BossEnemy
+            BossEnemy boss = collision.GetComponent<BossEnemy>();
+            if (boss != null)
+            {
+                boss.Hit(damage);
+            }
+
             Destroy(gameObject);
         }
     }

@@ -89,13 +89,20 @@ public class EnemySpawner : MonoBehaviour
         // Chờ đến khi không còn enemy nào trên scene
         yield return new WaitUntil(() => GameObject.FindGameObjectsWithTag("Enemy").Length == 0);
 
-        Debug.Log($"[EnemySpawner] Wave {currentWaveIndex + 1} CLEAR! Sang wave tiếp trong 3s...");
+        Debug.Log($"[EnemySpawner] Wave {currentWaveIndex + 1} CLEAR! Sang wave tiếp...");
 
-        // Báo GameManager (nếu có)
+        // Báo GameManager (nếu có) → sẽ trigger upgrade UI
         if (GameManager.Instance != null)
             GameManager.Instance.HandleWaveClear();
 
-        yield return new WaitForSeconds(3f);
+        // Chờ upgrade selection hoàn tất (nếu UpgradeManager đang show)
+        if (UpgradeManager.Instance != null && UpgradeManager.Instance.IsSelecting)
+        {
+            yield return new WaitUntil(() => !UpgradeManager.Instance.IsSelecting);
+        }
+
+        // Chờ 3s trước wave tiếp (dùng Realtime để không bị ảnh hưởng bởi TimeScale)
+        yield return new WaitForSecondsRealtime(3f);
 
         StartNextWave();
     }

@@ -10,14 +10,35 @@ public class Player : MonoBehaviour
     Rigidbody2D rb;
 
     bool dead;
-    public int maxHealth = 100;
+    public int maxHealth = 150;
     public int currentHealth;
 
     // Event khi HP thay đổi (HealthBar sẽ lắng nghe)
     public event Action<int, int> OnHealthChanged; // (currentHP, maxHP)
 
     // Event khi Player chết
-    public event Action OnDeath;
+    public event System.Action OnDeath;
+
+    // ──────────────────────────────────────────────
+    //  Public methods cho Upgrade / Pickup
+    // ──────────────────────────────────────────────
+    public void Heal(int amount)
+    {
+        currentHealth = Mathf.Min(currentHealth + amount, maxHealth);
+        OnHealthChanged?.Invoke(currentHealth, maxHealth);
+    }
+
+    public void AddMaxHP(int amount)
+    {
+        maxHealth += amount;
+        currentHealth += amount;
+        OnHealthChanged?.Invoke(currentHealth, maxHealth);
+    }
+
+    public void AddSpeed(float amount)
+    {
+        speed += amount;
+    }
 
     void Awake()
     {
@@ -61,6 +82,10 @@ public class Player : MonoBehaviour
 
         animator.SetTrigger("hit");
         currentHealth -= damage;
+
+        // SFX player bị đánh
+        if (AudioManager.Instance != null)
+            AudioManager.Instance.PlayPlayerHit();
 
         // Thông báo HP thay đổi
         OnHealthChanged?.Invoke(currentHealth, maxHealth);

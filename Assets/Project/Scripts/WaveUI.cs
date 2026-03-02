@@ -82,6 +82,8 @@ public class WaveUI : MonoBehaviour
             case GameManager.GameState.Playing:
                 int wave = GameManager.Instance.CurrentWave;
                 ShowAnnounce($"WAVE {wave}");
+                if (AudioManager.Instance != null)
+                    AudioManager.Instance.PlayWaveStart();
                 break;
 
             case GameManager.GameState.WaveClear:

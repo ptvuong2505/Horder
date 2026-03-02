@@ -1,35 +1,41 @@
 using System.Collections;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour
+/// <summary>
+/// EnemyRanged – Enemy giữ khoảng cách và bắn projectile về phía Player.
+/// Gắn lên prefab enemy Ranged thay cho script Enemy.cs thông thường.
+/// </summary>
+public class EnemyRanged : MonoBehaviour
 {
-    public int maxHealth;
-    public float speed;
-    public int damageToPlayer = 10;
+    [Header("Stats")]
+    public int maxHealth = 45;
+    public float speed = 1.5f;
+    public float attackRange = 7f;
+    public float fireRate = 2f;
+    public int damageToPlayer = 6;
+
+    [Header("Projectile")]
+    public GameObject projectilePrefab;
 
     private int currentHealth;
     private bool isDead = false;
+    private float fireCooldown = 0f;
 
     Animator anim;
     Rigidbody2D rb;
-
     Transform target;
-
-    private float attackCooldown = 1f;
-    private float lastAttackTime = 0f;
 
     void Start()
     {
-        currentHealth = maxHealth;        // Tìm đúng Animator trên child "Body" (có trigger Hit)
-        // GetComponentInChildren có thể lấy nhầm Animator khác
+        currentHealth = maxHealth;
+
         Transform bodyTransform = transform.Find("Sprites/Body");
         if (bodyTransform != null)
             anim = bodyTransform.GetComponent<Animator>();
         if (anim == null)
-            anim = GetComponentInChildren<Animator>(); // fallback
+            anim = GetComponentInChildren<Animator>();
 
         rb = GetComponent<Rigidbody2D>();
-
         if (rb != null)
         {
             rb.constraints = RigidbodyConstraints2D.FreezeRotation;
@@ -40,33 +46,61 @@ public class Enemy : MonoBehaviour
         if (playerObj != null)
             target = playerObj.transform;
 
-        // Đăng ký với EnemyManager
         if (EnemyManager.Instance != null)
             EnemyManager.Instance.RegisterEnemy(gameObject);
     }
 
     void Update()
     {
-        if (isDead) return;
+        if (isDead || target == null) return;
 
-        if (target != null && rb != null)
+        float dist = Vector2.Distance(transform.position, target.position);
+        Vector3 direction = (target.position - transform.position).normalized;
+
+        if (dist > attackRange)
         {
-            Vector3 direction = (target.position - transform.position).normalized;
-            rb.linearVelocity = new Vector2(direction.x * speed, direction.y * speed);
-            Flip(direction);
+            // Di chuyển về phía player
+            if (rb != null)
+                rb.linearVelocity = new Vector2(direction.x * speed, direction.y * speed);
         }
+        else
+        {
+            // Dừng lại và bắn
+            if (rb != null)
+                rb.linearVelocity = Vector2.zero;
+
+            fireCooldown -= Time.deltaTime;
+            if (fireCooldown <= 0f)
+            {
+                Fire(direction);
+                fireCooldown = fireRate;
+            }
+        }
+
+        Flip(direction);
+    }
+
+    void Fire(Vector3 direction)
+    {
+        if (projectilePrefab == null) return;
+
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        Quaternion rot = Quaternion.Euler(0, 0, angle);
+        GameObject proj = Instantiate(projectilePrefab, transform.position, rot);
+
+        EnemyProjectile ep = proj.GetComponent<EnemyProjectile>();
+        if (ep != null)
+            ep.damage = damageToPlayer;
     }
 
     public void Hit(int damage)
     {
         if (isDead) return;
-
         currentHealth -= damage;
 
         if (anim != null)
             anim.SetTrigger("Hit");
 
-        // SFX enemy bị đánh
         if (AudioManager.Instance != null)
             AudioManager.Instance.PlayEnemyHit();
 
@@ -77,11 +111,7 @@ public class Enemy : MonoBehaviour
     public void Flip(Vector3 dir)
     {
         if (dir.x != 0)
-        {
-            transform.localScale = new Vector3(
-                Mathf.Sign(-dir.x), 1, 1
-            );
-        }
+            transform.localScale = new Vector3(Mathf.Sign(-dir.x), 1, 1);
     }
 
     void Die()
@@ -89,30 +119,23 @@ public class Enemy : MonoBehaviour
         if (isDead) return;
         isDead = true;
 
-        // Dừng di chuyển
         if (rb != null)
             rb.linearVelocity = Vector2.zero;
 
-        // Tắt collider để không bị tấn công / tấn công player nữa
         var col = GetComponent<Collider2D>();
         if (col != null) col.enabled = false;
 
-        // SFX enemy chết
         if (AudioManager.Instance != null)
             AudioManager.Instance.PlayEnemyDie();
 
-        // Báo GameManager cộng điểm + coins
         if (GameManager.Instance != null)
             GameManager.Instance.RegisterKill();
 
-        // Báo EnemyManager giảm bộ đếm wave
         if (EnemyManager.Instance != null)
             EnemyManager.Instance.UnregisterEnemy(gameObject);
 
-        // Thử spawn pickup item
         PickupSpawner.TrySpawnPickup(transform.position);
 
-        // Chạy hiệu ứng chết (fade out sprite)
         StartCoroutine(DeathEffect());
     }
 
@@ -120,11 +143,7 @@ public class Enemy : MonoBehaviour
     {
         float duration = 0.5f;
         float elapsed = 0f;
-
-        // Thu thập tất cả SpriteRenderer trong object (Body + Hit child)
         SpriteRenderer[] renderers = GetComponentsInChildren<SpriteRenderer>();
-
-        // Lưu màu gốc
         Color[] originalColors = new Color[renderers.Length];
         for (int i = 0; i < renderers.Length; i++)
             originalColors[i] = renderers[i].color;
@@ -133,44 +152,15 @@ public class Enemy : MonoBehaviour
         {
             elapsed += Time.deltaTime;
             float alpha = Mathf.Lerp(1f, 0f, elapsed / duration);
-
             for (int i = 0; i < renderers.Length; i++)
             {
                 Color c = originalColors[i];
                 c.a = alpha;
                 renderers[i].color = c;
             }
-
             yield return null;
         }
 
         Destroy(gameObject);
-    }
-
-    void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (isDead) return;
-        if (collision.CompareTag("Player"))
-            AttackPlayer(collision.gameObject);
-    }
-
-    void OnTriggerStay2D(Collider2D collision)
-    {
-        if (isDead) return;
-        if (collision.CompareTag("Player"))
-        {
-            if (Time.time >= lastAttackTime + attackCooldown)
-                AttackPlayer(collision.gameObject);
-        }
-    }
-
-    void AttackPlayer(GameObject playerObject)
-    {
-        Player player = playerObject.GetComponent<Player>();
-        if (player != null)
-        {
-            player.Hit(damageToPlayer);
-            lastAttackTime = Time.time;
-        }
     }
 }

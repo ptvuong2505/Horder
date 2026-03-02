@@ -17,21 +17,23 @@ MonoBehaviour:
   - waveName: Wave 1
     enemies:
     - enemyData: {fileID: 11400000, guid: eda0a2e5b8a45d845a237a3d5b817a61, type: 2}
-      count: 5
-    spawnInterval: 1
-    delayBeforeWave: 1
+      count: 8
+    spawnInterval: 1.2
+    delayBeforeWave: 2
   - waveName: Wave 2
     enemies:
     - enemyData: {fileID: 11400000, guid: eda0a2e5b8a45d845a237a3d5b817a61, type: 2}
-      count: 5
+      count: 10
     - enemyData: {fileID: 11400000, guid: 2b00d17f8e9463e45bd9ae32a89bb3bd, type: 2}
       count: 3
     spawnInterval: 1
     delayBeforeWave: 2
   - waveName: Wave 3
     enemies:
+    - enemyData: {fileID: 11400000, guid: eda0a2e5b8a45d845a237a3d5b817a61, type: 2}
+      count: 6
     - enemyData: {fileID: 11400000, guid: 2b00d17f8e9463e45bd9ae32a89bb3bd, type: 2}
-      count: 5
+      count: 6
     - enemyData: {fileID: 11400000, guid: 441aeeb37705ed74b8f9ed10ce936e49, type: 2}
       count: 1
     spawnInterval: 0.8

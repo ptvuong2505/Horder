@@ -15,13 +15,13 @@ MonoBehaviour:
   gunName: Shotgun
   gunSprite: {fileID: 0}
   bulletPrefab: {fileID: 8073157801147965921, guid: ff69235797a1abb44801e04d0a8b8bcb, type: 3}
-  damage: 20
-  bulletSpeed: 12
-  bulletLifeTime: 2
-  fireRate: 0.8
-  detectRange: 6
+  damage: 5
+  bulletSpeed: 10
+  bulletLifeTime: 1.5
+  fireRate: 0.9
+  detectRange: 5
   bulletsPerShot: 5
-  spreadAngle: 45
+  spreadAngle: 40
   positionOffset: {x: 1, y: 0}
   muzzleFlashPrefab: {fileID: 0}
   muzzleFlashDuration: 0.05

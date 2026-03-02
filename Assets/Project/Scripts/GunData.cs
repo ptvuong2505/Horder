@@ -29,4 +29,7 @@ public class GunData : ScriptableObject
     [Header("Effects")]
     public GameObject muzzleFlashPrefab;  // Hiệu ứng lửa nòng, có thể để trống
     public float muzzleFlashDuration = 0.05f;
+
+    [Header("Audio")]
+    public AudioClip shootSFX;            // SFX riêng cho từng khẩu, nếu null sẽ dùng default
 }

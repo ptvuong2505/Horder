@@ -13,5 +13,13 @@ MonoBehaviour:
   m_Name: Enemy_Lv3
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   prefab: {fileID: 2476984947449450707, guid: ce77b5ac26b77174b9f3bea4619c41c3, type: 3}
-  hp: 300
-  speed: 3
+  hp: 250
+  speed: 2.5
+  damage: 18
+  enemyType: 0
+  projectilePrefab: {fileID: 0}
+  attackRange: 6
+  fireRate: 1.5
+  explosionRange: 2
+  explosionDamage: 30
+  explosionRadius: 3

@@ -66,6 +66,10 @@ public class Enemy : MonoBehaviour
         if (anim != null)
             anim.SetTrigger("Hit");
 
+        // SFX enemy bị đánh
+        if (AudioManager.Instance != null)
+            AudioManager.Instance.PlayEnemyHit();
+
         if (currentHealth <= 0)
             Die();
     }
@@ -93,6 +97,10 @@ public class Enemy : MonoBehaviour
         var col = GetComponent<Collider2D>();
         if (col != null) col.enabled = false;
 
+        // SFX enemy chết
+        if (AudioManager.Instance != null)
+            AudioManager.Instance.PlayEnemyDie();
+
         // Báo GameManager cộng điểm + coins
         if (GameManager.Instance != null)
             GameManager.Instance.RegisterKill();
@@ -100,6 +108,9 @@ public class Enemy : MonoBehaviour
         // Báo EnemyManager giảm bộ đếm wave
         if (EnemyManager.Instance != null)
             EnemyManager.Instance.UnregisterEnemy(gameObject);
+
+        // Thử spawn pickup item
+        PickupSpawner.TrySpawnPickup(transform.position);
 
         // Chạy hiệu ứng chết (fade out sprite)
         StartCoroutine(DeathEffect());

@@ -11,7 +11,11 @@ public class AutoGun : MonoBehaviour
     public GameObject muzzleFlash;      // Hiệu ứng lửa nòng (SpriteRenderer / Particle)
 
     private float fireCooldown = 0f;
-    private Transform currentTarget;    // Gọi từ WeaponManager để truyền GunData vào
+    private Transform currentTarget;
+
+    // Multipliers cho upgrade/pickup (mặc định = 1)
+    [HideInInspector] public float damageMultiplier = 1f;
+    [HideInInspector] public float fireRateMultiplier = 1f;    // Gọi từ WeaponManager để truyền GunData vào
     public void Setup(GunData data)
     {
         gunData = data;
@@ -40,7 +44,7 @@ public class AutoGun : MonoBehaviour
             if (fireCooldown <= 0f)
             {
                 Fire();
-                fireCooldown = gunData.fireRate;
+                fireCooldown = gunData.fireRate * fireRateMultiplier;
             }
         }
     }
@@ -100,7 +104,9 @@ public class AutoGun : MonoBehaviour
         if (muzzleFlash != null)
             StartCoroutine(ShowMuzzleFlash());
 
-        Debug.Log($"[AutoGun] {gunData.gunName} bắn! Target: {currentTarget?.name}");
+        // Phát SFX bắn
+        if (AudioManager.Instance != null)
+            AudioManager.Instance.PlayShoot(gunData.shootSFX);
     }
 
     void SpawnBullet(Vector3 pos, Quaternion baseRot, float angleOffset)
@@ -111,7 +117,7 @@ public class AutoGun : MonoBehaviour
         Bullet bullet = bulletObj.GetComponent<Bullet>();
         if (bullet != null)
         {
-            bullet.damage = gunData.damage;
+            bullet.damage = Mathf.RoundToInt(gunData.damage * damageMultiplier);
             bullet.speed  = gunData.bulletSpeed;
         }
     }

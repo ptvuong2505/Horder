@@ -89,13 +89,47 @@ public class EnemySpawner : MonoBehaviour
         // Chờ đến khi không còn enemy nào trên scene
         yield return new WaitUntil(() => GameObject.FindGameObjectsWithTag("Enemy").Length == 0);
 
-        Debug.Log($"[EnemySpawner] Wave {currentWaveIndex + 1} CLEAR! Sang wave tiếp trong 3s...");
+        Debug.Log($"[EnemySpawner] Wave {currentWaveIndex + 1} CLEAR! Sang wave tiếp...");
 
-        // Báo GameManager (nếu có)
+        // Báo GameManager (nếu có) → sẽ trigger upgrade UI
         if (GameManager.Instance != null)
             GameManager.Instance.HandleWaveClear();
 
-        yield return new WaitForSeconds(3f);
+        // Chờ upgrade selection hoàn tất (nếu UpgradeManager đang show)
+        if (UpgradeManager.Instance != null && UpgradeManager.Instance.IsSelecting)
+        {
+            yield return new WaitUntil(() => !UpgradeManager.Instance.IsSelecting);
+        }
+
+        // ═══ BOSS SPAWN ═══
+        // Kiểm tra xem có cần spawn boss sau wave này không
+        int bossAfterWave = levelConfig.bossSpawnAfterWave;
+        if (bossAfterWave < 0) bossAfterWave = levelConfig.waves.Count - 1; // -1 = sau wave cuối
+
+        if (levelConfig.hasBoss && levelConfig.bossPrefab != null && currentWaveIndex == bossAfterWave)
+        {
+            Debug.Log("[EnemySpawner] ⚠️ BOSS INCOMING!");
+            yield return new WaitForSeconds(2f);
+
+            // Spawn boss ở vị trí xa player
+            Vector3 bossPos = GetSpawnPosition();
+            GameObject boss = Instantiate(levelConfig.bossPrefab, bossPos, Quaternion.identity);
+            Debug.Log($"[EnemySpawner] 👑 BOSS SPAWNED tại {bossPos}");
+
+            // Chờ boss bị tiêu diệt
+            yield return new WaitUntil(() => boss == null);
+            Debug.Log("[EnemySpawner] 👑 BOSS DEFEATED!");
+
+            // Chờ thêm minion chết hết
+            yield return new WaitUntil(() => GameObject.FindGameObjectsWithTag("Enemy").Length == 0);
+
+            // Báo wave clear cho boss wave
+            if (GameManager.Instance != null)
+                GameManager.Instance.HandleWaveClear();
+        }
+
+        // Chờ 3s trước wave tiếp (dùng Realtime để không bị ảnh hưởng bởi TimeScale)
+        yield return new WaitForSecondsRealtime(3f);
 
         StartNextWave();
     }

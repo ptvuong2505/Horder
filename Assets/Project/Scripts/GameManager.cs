@@ -107,6 +107,15 @@ public class GameManager : MonoBehaviour
 
         state = GameState.WaveClear;
         OnStateChanged?.Invoke(state);
+
+        // SFX wave clear
+        if (AudioManager.Instance != null)
+            AudioManager.Instance.PlayWaveClear();
+
+        // Hiện upgrade selection (nếu có UpgradeManager)
+        if (UpgradeManager.Instance != null)
+            UpgradeManager.Instance.ShowUpgradeSelection();
+
         Debug.Log($"[GameManager] Wave {currentWave} clear! +{levelConfig?.bonusScorePerWave} điểm thưởng");
     }
 
@@ -172,6 +181,11 @@ public class GameManager : MonoBehaviour
         if (state == GameState.GameOver) return;
         state = GameState.GameOver;
         OnStateChanged?.Invoke(state);
+
+        // SFX game over
+        if (AudioManager.Instance != null)
+            AudioManager.Instance.PlayGameOver();
+
         Debug.Log($"[GameManager] Game Over! Score: {score}");        // Lưu điểm & coins để GameOverScene hiển thị
         PlayerPrefs.SetInt("FinalScore", score);
         PlayerPrefs.SetInt("FinalCoins", coins);

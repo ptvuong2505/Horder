@@ -1,11 +1,22 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// EnemyManager – Singleton quản lý danh sách enemy còn sống.
+/// Thông báo khi toàn bộ enemy trong wave bị tiêu diệt.
+/// </summary>
 public class EnemyManager : MonoBehaviour
 {
     public static EnemyManager Instance;
 
     private List<GameObject> aliveEnemies = new List<GameObject>();
+
+    // Event: gọi khi tất cả enemy đã chết (để GameManager chuyển wave)
+    public event Action OnAllEnemiesDead;
+
+    // Tổng số enemy đã bị tiêu diệt (dùng tính điểm)
+    public int TotalKilled { get; private set; }
 
     void Awake()
     {
@@ -15,18 +26,32 @@ public class EnemyManager : MonoBehaviour
             Destroy(gameObject);
     }
 
+    // ──────────────────────────────────────────────
     public void RegisterEnemy(GameObject enemy)
     {
-        aliveEnemies.Add(enemy);
+        if (!aliveEnemies.Contains(enemy))
+            aliveEnemies.Add(enemy);
     }
 
     public void UnregisterEnemy(GameObject enemy)
     {
         aliveEnemies.Remove(enemy);
+        TotalKilled++;
+
+        // Nếu hết enemy VÀ spawner đã hết (spawner tự báo GameManager)
+        // → chỉ fire event nếu danh sách trống
+        if (aliveEnemies.Count == 0)
+        {
+            OnAllEnemiesDead?.Invoke();
+        }
     }
 
-    public int GetAliveCount()
+    public int GetAliveCount() => aliveEnemies.Count;
+
+    // Xóa toàn bộ danh sách (khi bắt đầu wave mới)
+    public void ResetWave()
     {
-        return aliveEnemies.Count;
+        aliveEnemies.Clear();
     }
 }
+

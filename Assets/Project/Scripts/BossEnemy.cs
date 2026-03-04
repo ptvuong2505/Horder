@@ -94,6 +94,11 @@ public class BossEnemy : MonoBehaviour
         if (EnemyManager.Instance != null)
             EnemyManager.Instance.RegisterEnemy(gameObject);
 
+        // Báo cho BossHealthBar hiển thị
+        BossHealthBar hpBar = FindFirstObjectByType<BossHealthBar>(FindObjectsInactive.Include);
+        if (hpBar != null)
+            hpBar.RegisterBoss(this);
+
         OnHealthChanged?.Invoke(currentHealth, maxHealth);
     }
 

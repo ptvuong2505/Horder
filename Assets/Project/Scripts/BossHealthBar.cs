@@ -1,103 +1,76 @@
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
-
-/// <summary>
-/// BossHealthBar – Thanh HP boss hiện ở trên đầu màn hình.
-/// Tự tìm BossEnemy trong scene và subscribe OnHealthChanged.
-/// Ẩn khi không có boss, hiện khi boss spawn.
-/// </summary>
 public class BossHealthBar : MonoBehaviour
 {
     [Header("UI References")]
     public Image fillImage;
-    public Image backgroundImage;
-    public TextMeshProUGUI bossNameText;
-    public TextMeshProUGUI phaseText;
-    public CanvasGroup canvasGroup;
 
     private BossEnemy currentBoss;
-    private bool isVisible = false;
 
-    void Start()
+    void Awake()
     {
-        if (canvasGroup != null)
-            canvasGroup.alpha = 0;
+        // Ẩn ở runtime; object vẫn active trong prefab để chỉnh UI trong Editor
+        gameObject.SetActive(false);
     }
 
-    void Update()
-    {
-        // Tìm boss nếu chưa có
-        if (currentBoss == null)
-        {
-            BossEnemy boss = FindFirstObjectByType<BossEnemy>();
-            if (boss != null)
-                RegisterBoss(boss);
-            else if (isVisible)
-                Hide();
-        }
-    }
-
+    /// <summary>
+    /// Gọi từ BossEnemy.Start() khi boss vừa spawn.
+    /// </summary>
     public void RegisterBoss(BossEnemy boss)
     {
+        if (boss == null) return;
+
+        if (currentBoss != null)
+        {
+            currentBoss.OnHealthChanged -= UpdateFill;
+            currentBoss.OnBossDied -= OnBossDied;
+        }
+
         currentBoss = boss;
-        currentBoss.OnHealthChanged += UpdateHealthBar;
+        currentBoss.OnHealthChanged += UpdateFill;
         currentBoss.OnBossDied += OnBossDied;
 
-        if (bossNameText != null)
-            bossNameText.text = "👑 KING SLIME";
-
-        Show();
-        UpdateHealthBar(boss.maxHealth, boss.maxHealth);
+        gameObject.SetActive(true);
+        UpdateFill(boss.maxHealth, boss.maxHealth);
     }
 
-    void UpdateHealthBar(int current, int max)
+    void UpdateFill(int current, int max)
     {
-        if (fillImage != null)
-        {
-            float percent = (float)current / max;
-            fillImage.fillAmount = percent;
+        if (fillImage == null) return;
 
-            // Đổi màu theo HP
-            if (percent > 0.5f)
-                fillImage.color = Color.green;
-            else if (percent > 0.25f)
-                fillImage.color = Color.yellow;
-            else
-                fillImage.color = Color.red;
-        }
+        float pct = (float)current / Mathf.Max(1, max);
+        fillImage.fillAmount = Mathf.Clamp01(pct);
 
-        if (phaseText != null && currentBoss != null)
-        {
-            if (currentBoss.IsEnraged)
-                phaseText.text = "🔥 ENRAGED!";
-            else if (currentBoss.CurrentPhase == 2)
-                phaseText.text = "⚡ Phase 2";
-            else
-                phaseText.text = "";
-        }
+        if (pct > 0.5f)
+            fillImage.color = Color.green;
+        else if (pct > 0.25f)
+            fillImage.color = Color.yellow;
+        else
+            fillImage.color = Color.red;
     }
 
     void OnBossDied()
     {
-        if (phaseText != null)
-            phaseText.text = "💀 DEFEATED!";
-
-        Invoke(nameof(Hide), 2f);
+        if (currentBoss != null)
+        {
+            currentBoss.OnHealthChanged -= UpdateFill;
+            currentBoss.OnBossDied -= OnBossDied;
+            currentBoss = null;
+        }
+        Invoke(nameof(HideBar), 2f);
     }
 
-    void Show()
+    void HideBar()
     {
-        isVisible = true;
-        if (canvasGroup != null)
-            canvasGroup.alpha = 1;
+        gameObject.SetActive(false);
     }
 
-    void Hide()
+    void OnDestroy()
     {
-        isVisible = false;
-        currentBoss = null;
-        if (canvasGroup != null)
-            canvasGroup.alpha = 0;
+        if (currentBoss != null)
+        {
+            currentBoss.OnHealthChanged -= UpdateFill;
+            currentBoss.OnBossDied -= OnBossDied;
+        }
     }
 }

@@ -13,6 +13,7 @@
     "com.unity.ai.generators": "1.5.0-pre.2",
     "com.unity.ai.inference": "2.4.1",
     "com.unity.ai.toolkit": "1.5.0-pre.2",
+    "com.unity.burst": "1.8.28",
     "com.unity.cinemachine": "3.1.5",
     "com.unity.collab-proxy": "2.11.2",
     "com.unity.ide.rider": "3.0.38",

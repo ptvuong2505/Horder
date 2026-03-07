@@ -25,3 +25,7 @@ MonoBehaviour:
   positionOffset: {x: 1, y: 0}
   muzzleFlashPrefab: {fileID: 0}
   muzzleFlashDuration: 0.05
+  shootSFX: {fileID: 0}
+  unlockedByDefault: 0
+  unlockCost: 80
+  description: 

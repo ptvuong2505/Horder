@@ -17,7 +17,7 @@ public class WeaponManager : MonoBehaviour
 
     // Event thông báo (giữ để tương thích nếu UI dùng)
     public event Action<int, GunData> OnWeaponChanged;    // ──────────────────────────────────────────────
-    // Dùng Awake để Setup trước khi các AutoGun.Start() chạy
+    // Awake: setup GunData, tắt hết, TỰ TẠO GunShop nếu chưa có
     void Awake()
     {
         if (guns.Count == 0 || gunDataList.Count == 0)
@@ -26,22 +26,59 @@ public class WeaponManager : MonoBehaviour
             return;
         }
 
-        // Setup dữ liệu và bật TẤT CẢ súng cùng lúc
+        // Tắt hết trước
         for (int i = 0; i < guns.Count; i++)
         {
             if (guns[i] == null) continue;
-
             if (i < gunDataList.Count && gunDataList[i] != null)
-            {
                 guns[i].Setup(gunDataList[i]);
-                guns[i].gameObject.SetActive(true);
-                Debug.Log($"[WeaponManager] Bật súng [{i}]: {gunDataList[i].gunName}");
-            }
-            else
-            {
-                Debug.LogWarning($"[WeaponManager] Súng [{i}] không có GunData, bỏ qua.");
-            }
+            guns[i].gameObject.SetActive(false);
         }
+
+        // Tự tạo GunShop nếu chưa có trong scene
+        if (GunShop.Instance == null)
+        {
+            GameObject shopGO = new GameObject("GunShop");
+            GunShop shop = shopGO.AddComponent<GunShop>();
+            shop.allGuns = new List<GunData>(gunDataList);
+            shop.ReinitUnlockState();
+            Debug.Log("[WeaponManager] Đã tự tạo GunShop.");
+        }
+    }
+
+    void Start()
+    {
+        // Bật súng đã unlock
+        for (int i = 0; i < guns.Count; i++)
+        {
+            if (guns[i] == null) continue;
+            bool on = GunShop.Instance != null && GunShop.Instance.IsUnlocked(i);
+            guns[i].gameObject.SetActive(on);
+            if (on) Debug.Log($"[WeaponManager] Bật súng [{i}]: {gunDataList[i]?.gunName}");
+        }
+
+        // Wire GunShopUI (đã có trong scene) vào GameManager
+        var shopUI = FindFirstObjectByType<GunShopUI>();
+        if (shopUI != null && GameManager.Instance != null)
+            GameManager.Instance.gunShopUI = shopUI;
+        else if (shopUI == null)
+            Debug.LogWarning("[WeaponManager] Không tìm thấy GunShopUI trong scene. Chạy Tools > Setup Gun Shop UI trước.");
+    }
+
+    // ──────────────────────────────────────────────
+    //  Gọi từ GunShop khi player mở khóa súng mới
+    // ──────────────────────────────────────────────
+    public void ActivateGunSlot(int index)
+    {
+        if (index < 0 || index >= guns.Count) return;
+        if (guns[index] == null) return;
+
+        if (index < gunDataList.Count && gunDataList[index] != null)
+            guns[index].Setup(gunDataList[index]);
+
+        guns[index].gameObject.SetActive(true);
+        Debug.Log($"[WeaponManager] Kích hoạt súng mới [{index}]: {gunDataList[index]?.gunName}");
+        OnWeaponChanged?.Invoke(index, gunDataList[index]);
     }
 
     // ──────────────────────────────────────────────

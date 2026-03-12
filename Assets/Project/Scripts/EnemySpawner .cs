@@ -109,7 +109,13 @@ public class EnemySpawner : MonoBehaviour
         if (levelConfig.hasBoss && levelConfig.bossPrefab != null && currentWaveIndex == bossAfterWave)
         {
             Debug.Log("[EnemySpawner] ⚠️ BOSS INCOMING!");
-            yield return new WaitForSeconds(2f);
+
+            // Hiển thị cảnh báo boss 2 giây
+            BossWarningUI bossWarning = FindFirstObjectByType<BossWarningUI>();
+            if (bossWarning != null)
+                yield return StartCoroutine(bossWarning.ShowAndHide(2f));
+            else
+                yield return new WaitForSecondsRealtime(2f);
 
             // Spawn boss ở vị trí xa player
             Vector3 bossPos = GetSpawnPosition();

@@ -27,14 +27,29 @@ public class WaveConfig
 //  LevelConfig: danh sách các wave + boss config
 //  Tạo asset: chuột phải > Create > Game/Level Config
 // ─────────────────────────────────────────────────────────
+/// <summary>
+/// LevelConfig
+/// Dữ liệu cấu hình cho 1 level:
+/// - Danh sách waves (mỗi wave gồm nhiều EnemySpawnInfo)
+/// - Quy tắc tính điểm/coins
+/// - (Tuỳ chọn) boss spawn sau wave nhất định
+/// 
+/// bossSpawnAfterWave:
+/// - -1 nghĩa là spawn boss sau wave cuối.
+/// - 0 nghĩa là spawn boss sau wave đầu tiên (wave index 0).
+/// </summary>
 [CreateAssetMenu(fileName = "LevelConfig", menuName = "Game/Level Config")]
 public class LevelConfig : ScriptableObject
 {
     public string levelName = "Level 1";
     public List<WaveConfig> waves = new List<WaveConfig>();
-    public int scorePerKill = 10;       // Điểm mỗi khi giết 1 enemy
-    public int coinsPerKill = 5;        // Coins rơi mỗi khi giết 1 enemy
-    public int bonusScorePerWave = 50;  // Điểm thưởng hoàn thành wave
+
+    // Coins = meta currency (mua súng ở menu/chọn level)
+    public int coinsPerKill = 5;
+
+    [Header("In-run Currency (Scrap)")]
+    public int scrapPerKill = 1;
+    public int scrapBonusPerWave = 3;
 
     [Header("Boss Settings")]
     public bool hasBoss = false;                    // Level này có boss không?

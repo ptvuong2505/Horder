@@ -2,6 +2,17 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+/// <summary>
+/// Player
+/// Chịu trách nhiệm:
+/// - Nhận input di chuyển (Input System) và set velocity cho Rigidbody2D.
+/// - Quản lý HP (Heal/Hit/AddMaxHP) và phát event OnHealthChanged cho UI.
+/// - Khi chết: phát OnDeath và báo GameManager.TriggerGameOver().
+/// 
+/// Ghi chú:
+/// - Gameplay hiện tại thiên về "survivor-like" (bắn tự động), nên Player thường cần thêm:
+///   Dash/Skill/Interact... (chưa implement).
+/// </summary>
 public class Player : MonoBehaviour
 {
     private Vector2 moveInput;
@@ -12,6 +23,10 @@ public class Player : MonoBehaviour
     bool dead;
     public int maxHealth = 150;
     public int currentHealth;
+
+    [Header("Combat")]
+    [Tooltip("Nếu true, Player tạm thời không nhận damage (dùng cho dash i-frames, skill shield...).")]
+    public bool invulnerable = false;
 
     // Event khi HP thay đổi (HealthBar sẽ lắng nghe)
     public event Action<int, int> OnHealthChanged; // (currentHP, maxHP)
@@ -55,6 +70,8 @@ public class Player : MonoBehaviour
 
     public void OnMove(InputAction.CallbackContext context)
     {
+        // Input System gọi function này qua PlayerInput.
+        // performed/canceled để lấy cả lúc nhả phím (vector = 0).
         if (context.performed || context.canceled)
         {
             moveInput = context.ReadValue<Vector2>();
@@ -62,8 +79,11 @@ public class Player : MonoBehaviour
 
         }
     }
+
     private void Update()
     {
+        // Movement được điều khiển trực tiếp bằng velocity.
+        // Khi dead = true, khóa movement.
         if (!dead)
         {
             rb.linearVelocity = moveInput * speed;
@@ -77,6 +97,9 @@ public class Player : MonoBehaviour
     // PUBLIC - Enemy có thể gọi để gây sát thương
     public void Hit(int damage)
     {
+        // Nếu đang có i-frames (dash/skill), bỏ qua damage.
+        if (invulnerable) return;
+
         if (dead)
             return; // Đã chết thì không nhận damage nữa
 

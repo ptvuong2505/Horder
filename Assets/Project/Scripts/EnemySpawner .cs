@@ -2,6 +2,30 @@ using System;
 using System.Collections;
 using UnityEngine;
 
+/// <summary>
+/// EnemySpawner
+/// Điều khiển tiến trình các wave trong 1 level.
+/// 
+/// Flow tổng quát:
+/// 1) StartNextWave() -> chọn WaveConfig theo index.
+/// 2) SpawnWave():
+///    - Wait delayBeforeWave
+///    - spawn enemy theo danh sách EnemySpawnInfo (có spawnInterval)
+///    - đợi đến khi wave sạch enemy
+///    - gọi GameManager.HandleWaveClear() để cộng thưởng + mở UI upgrade
+///    - đợi player chọn upgrade xong (UpgradeManager.IsSelecting)
+///    - (tuỳ chọn) spawn boss sau wave cấu hình, đợi boss chết
+///    - chờ 1 khoảng rồi StartNextWave()
+/// 
+/// Lưu ý hiệu năng (prototype):
+/// - Đang dùng GameObject.FindGameObjectsWithTag("Enemy") để check wave clear.
+///   Khi số lượng enemy lớn sẽ tốn CPU/GC.
+///   Về sau nên thay bằng EnemyManager.GetAliveCount() hoặc bộ đếm spawn/killed.
+/// 
+/// Lưu ý TimeScale:
+/// - Upgrade UI đang pause game bằng Time.timeScale = 0.
+/// - Các đoạn chờ giữa wave dùng WaitForSecondsRealtime để không bị ảnh hưởng.
+/// </summary>
 public class EnemySpawner : MonoBehaviour
 {
     [Header("Config")]
@@ -20,8 +44,9 @@ public class EnemySpawner : MonoBehaviour
     public int CurrentWaveIndex => currentWaveIndex;
     public int TotalWaves => levelConfig != null ? levelConfig.waves.Count : 0;
 
-    void Start()
+    private void Start()
     {
+        // EnemySpawner tự kick-off wave đầu tiên.
         StartNextWave();
     }
 

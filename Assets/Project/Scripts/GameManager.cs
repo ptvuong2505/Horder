@@ -3,9 +3,16 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 /// <summary>
-/// GameManager – Singleton quản lý toàn bộ vòng đời game:
-/// wave, điểm số, thắng/thua.
-/// Gắn vào GameObject "GameManager" trong scene.
+/// GameManager (Singleton)
+/// Quản lý vòng đời 1 màn chơi:
+/// - Theo dõi Coins/Scrap/Wave và phát event cho UI.
+/// - Nhận tín hiệu từ EnemySpawner + EnemyManager để biết wave bắt đầu/kết thúc.
+/// - Khi WaveClear: play SFX, mở UI upgrade (pause game) và thưởng Scrap.
+/// - Khi LevelClear/GameOver: chuyển scene.
+/// 
+/// Dữ liệu được lưu qua PlayerPrefs khi GameOver:
+/// - FinalCoins
+/// - FinalScrap
 /// </summary>
 public class GameManager : MonoBehaviour
 {
@@ -15,19 +22,29 @@ public class GameManager : MonoBehaviour
     public EnemySpawner enemySpawner;
 
     [Header("Level Config")]
-    public LevelConfig levelConfig;     // Gán cùng LevelConfig với EnemySpawner    // ──────────────────────────────────────────────
-    //  Score
+    public LevelConfig levelConfig;     // Gán cùng LevelConfig với EnemySpawner
+
     // ──────────────────────────────────────────────
-    private int score = 0;
-    public int Score => score;
-    public event Action<int> OnScoreChanged;   // (newScore)
+    //  NOTE: Score system removed per request.
+    //  Nếu cần hiển thị tiến trình trong run, ưu tiên dùng Wave/KillCount/TimeSurvived thay vì điểm.
+    // ──────────────────────────────────────────────
 
     // ──────────────────────────────────────────────
     //  Coins (tiền rơi từ enemy)
     // ──────────────────────────────────────────────
+    // ──────────────────────────────────────────────
     private int coins = 0;
     public int Coins => coins;
     public event Action<int> OnCoinsChanged;   // (newCoins)
+
+    // ──────────────────────────────────────────────
+    //  Scrap (tiền trong trận / in-run currency)
+    //  Dùng cho các quyết định trong run: reroll upgrade, mua item trong shop giữa trận...
+    //  Coins vẫn giữ vai trò meta-currency (mua súng ở menu/chọn level).
+    // ──────────────────────────────────────────────
+    private int scrap = 0;
+    public int Scrap => scrap;
+    public event Action<int> OnScrapChanged;   // (newScrap)
 
     // ──────────────────────────────────────────────
     //  Wave
@@ -58,7 +75,9 @@ public class GameManager : MonoBehaviour
     {
         // Đăng ký lắng nghe EnemyManager
         if (EnemyManager.Instance != null)
-            EnemyManager.Instance.OnAllEnemiesDead += HandleAllEnemiesDead;        // Đăng ký lắng nghe EnemySpawner
+            EnemyManager.Instance.OnAllEnemiesDead += HandleAllEnemiesDead;
+
+        // Đăng ký lắng nghe EnemySpawner
         if (enemySpawner != null)
         {
             enemySpawner.OnWaveStarted += HandleWaveStarted;
@@ -95,7 +114,9 @@ public class GameManager : MonoBehaviour
         OnWaveChanged?.Invoke(currentWave, TotalWaves);
         OnStateChanged?.Invoke(state);
         Debug.Log($"[GameManager] Wave {currentWave}/{TotalWaves} bắt đầu!");
-    }    // ──────────────────────────────────────────────
+    }
+
+    // ──────────────────────────────────────────────
     //  Khi hết enemy trong wave (gọi từ EnemySpawner)
     // ──────────────────────────────────────────────
     public void HandleWaveClear()
@@ -103,7 +124,10 @@ public class GameManager : MonoBehaviour
         if (state != GameState.Playing) return;
 
         if (levelConfig != null)
-            AddScore(levelConfig.bonusScorePerWave);
+        {
+            // Score removed
+            AddScrap(levelConfig.scrapBonusPerWave);
+        }
 
         state = GameState.WaveClear;
         OnStateChanged?.Invoke(state);
@@ -116,7 +140,7 @@ public class GameManager : MonoBehaviour
         if (UpgradeManager.Instance != null)
             UpgradeManager.Instance.ShowUpgradeSelection();
 
-        Debug.Log($"[GameManager] Wave {currentWave} clear! +{levelConfig?.bonusScorePerWave} điểm thưởng");
+        Debug.Log($"[GameManager] Wave {currentWave} clear!");
     }
 
     // Giữ lại để tương thích với EnemyManager event
@@ -143,13 +167,6 @@ public class GameManager : MonoBehaviour
             SceneManager.LoadScene(next);
         else
             SceneManager.LoadScene("Menu"); // Hết game → về Menu
-    }    // ──────────────────────────────────────────────
-    //  Điểm số
-    // ──────────────────────────────────────────────
-    public void AddScore(int amount)
-    {
-        score += amount;
-        OnScoreChanged?.Invoke(score);
     }
 
     // ──────────────────────────────────────────────
@@ -161,15 +178,39 @@ public class GameManager : MonoBehaviour
         OnCoinsChanged?.Invoke(coins);
     }
 
+    // ──────────────────────────────────────────────
+    //  Scrap
+    // ──────────────────────────────────────────────
     /// <summary>
-    /// Gọi từ Enemy khi bị tiêu diệt: cộng điểm + coins.
+    /// Add/Spend scrap trong run.
+    /// amount có thể âm (chi tiêu).
+    /// </summary>
+    public void AddScrap(int amount)
+    {
+        scrap = Mathf.Max(0, scrap + amount);
+        OnScrapChanged?.Invoke(scrap);
+    }
+
+    /// <summary>
+    /// Thử chi scrap. Trả về true nếu đủ tiền và đã trừ.
+    /// </summary>
+    public bool TrySpendScrap(int amount)
+    {
+        if (amount <= 0) return true;
+        if (scrap < amount) return false;
+        AddScrap(-amount);
+        return true;
+    }
+
+    /// <summary>
+    /// Gọi từ Enemy khi bị tiêu diệt: cộng coins + scrap.
     /// </summary>
     public void RegisterKill()
     {
         if (levelConfig != null)
         {
-            AddScore(levelConfig.scorePerKill);
             AddCoins(levelConfig.coinsPerKill);
+            AddScrap(levelConfig.scrapPerKill);
         }
     }
 
@@ -186,9 +227,11 @@ public class GameManager : MonoBehaviour
         if (AudioManager.Instance != null)
             AudioManager.Instance.PlayGameOver();
 
-        Debug.Log($"[GameManager] Game Over! Score: {score}");        // Lưu điểm & coins để GameOverScene hiển thị
-        PlayerPrefs.SetInt("FinalScore", score);
+        Debug.Log($"[GameManager] Game Over! Coins: {coins}, Scrap: {scrap}");
+
+        // Lưu dữ liệu cần thiết để GameOverScene hiển thị
         PlayerPrefs.SetInt("FinalCoins", coins);
+        PlayerPrefs.SetInt("FinalScrap", scrap);
         PlayerPrefs.Save();
 
         Invoke(nameof(LoadGameOverScene), 2f);

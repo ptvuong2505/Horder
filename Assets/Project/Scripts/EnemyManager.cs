@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// EnemyManager – Singleton quản lý danh sách enemy còn sống.
-/// Thông báo khi toàn bộ enemy trong wave bị tiêu diệt.
+/// EnemyManager (Singleton)
+/// Mục tiêu:
+/// - Giữ danh sách enemy còn sống để các hệ thống khác query (alive count, tổng kill...).
+/// - Về lâu dài nên dùng EnemyManager thay cho GameObject.FindGameObjectsWithTag("Enemy")
+///   để giảm chi phí mỗi frame.
 /// </summary>
 public class EnemyManager : MonoBehaviour
 {

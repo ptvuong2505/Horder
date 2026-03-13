@@ -17,6 +17,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/bg_game_over.unity
     guid: 1d4e1cb6587e06e46a75817661807f4c
+  - enabled: 1
+    path: Assets/Scenes/bg_pause.unity
+    guid: a15748a6c5e6da745876576c7b74e95b
   m_configObjects:
     com.unity.dt.app-ui: {fileID: 11400000, guid: 1b1c20d82303e4b5781c3ef50ac1449f, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}

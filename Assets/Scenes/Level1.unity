@@ -315,7 +315,23 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!1001 &315587678
+--- !u!4 &394961057 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1569846035393073784, guid: 2a369d4b6216e664fb2d9577a3cc7bc6, type: 3}
+  m_PrefabInstance: {fileID: 1773571912}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &420331070 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6575154115086665005, guid: 2a369d4b6216e664fb2d9577a3cc7bc6, type: 3}
+  m_PrefabInstance: {fileID: 1773571912}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1559b98f90b6e944b9587440ed63dd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AutoGun
+--- !u!1001 &481264432
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -323,62 +339,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 9100000000000005, guid: 30bb1f4bc0fd0e54c8ec023f4912bfe8, type: 3}
-      propertyPath: m_PresetInfoIsWorld
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 9200000000000002, guid: 30bb1f4bc0fd0e54c8ec023f4912bfe8, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 221
-      objectReference: {fileID: 0}
-    - target: {fileID: 9200000000000002, guid: 30bb1f4bc0fd0e54c8ec023f4912bfe8, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 26.3525
-      objectReference: {fileID: 0}
-    - target: {fileID: 9200000000000002, guid: 30bb1f4bc0fd0e54c8ec023f4912bfe8, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 287.53
-      objectReference: {fileID: 0}
-    - target: {fileID: 9200000000000002, guid: 30bb1f4bc0fd0e54c8ec023f4912bfe8, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 144
-      objectReference: {fileID: 0}
-    - target: {fileID: 9200000000000004, guid: 30bb1f4bc0fd0e54c8ec023f4912bfe8, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 4541760805917703298, guid: a8e478d0688f69a4daa5b941980c3899, type: 3}
-    - target: {fileID: 9300000000000002, guid: 30bb1f4bc0fd0e54c8ec023f4912bfe8, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 253.9847
-      objectReference: {fileID: 0}
-    - target: {fileID: 9300000000000002, guid: 30bb1f4bc0fd0e54c8ec023f4912bfe8, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 48.4887
-      objectReference: {fileID: 0}
-    - target: {fileID: 9300000000000002, guid: 30bb1f4bc0fd0e54c8ec023f4912bfe8, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 270.99963
-      objectReference: {fileID: 0}
-    - target: {fileID: 9300000000000002, guid: 30bb1f4bc0fd0e54c8ec023f4912bfe8, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 144.00005
-      objectReference: {fileID: 0}
-    - target: {fileID: 4997146008336824550, guid: 30bb1f4bc0fd0e54c8ec023f4912bfe8, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 253.9847
-      objectReference: {fileID: 0}
-    - target: {fileID: 4997146008336824550, guid: 30bb1f4bc0fd0e54c8ec023f4912bfe8, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 48.4887
-      objectReference: {fileID: 0}
-    - target: {fileID: 4997146008336824550, guid: 30bb1f4bc0fd0e54c8ec023f4912bfe8, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: -244.64046
-      objectReference: {fileID: 0}
-    - target: {fileID: 4997146008336824550, guid: 30bb1f4bc0fd0e54c8ec023f4912bfe8, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 149.10004
-      objectReference: {fileID: 0}
     - target: {fileID: 5107406715444636451, guid: 30bb1f4bc0fd0e54c8ec023f4912bfe8, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -459,22 +419,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6598299629721224597, guid: 30bb1f4bc0fd0e54c8ec023f4912bfe8, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 221
-      objectReference: {fileID: 0}
-    - target: {fileID: 6598299629721224597, guid: 30bb1f4bc0fd0e54c8ec023f4912bfe8, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 26.3525
-      objectReference: {fileID: 0}
-    - target: {fileID: 6598299629721224597, guid: 30bb1f4bc0fd0e54c8ec023f4912bfe8, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: -228.7
-      objectReference: {fileID: 0}
-    - target: {fileID: 6598299629721224597, guid: 30bb1f4bc0fd0e54c8ec023f4912bfe8, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 149.1
-      objectReference: {fileID: 0}
     - target: {fileID: 8655923359609675890, guid: 30bb1f4bc0fd0e54c8ec023f4912bfe8, type: 3}
       propertyPath: m_Name
       value: UI_HealthBar
@@ -484,22 +428,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 30bb1f4bc0fd0e54c8ec023f4912bfe8, type: 3}
---- !u!4 &394961057 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 1569846035393073784, guid: 2a369d4b6216e664fb2d9577a3cc7bc6, type: 3}
-  m_PrefabInstance: {fileID: 1773571912}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &420331070 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6575154115086665005, guid: 2a369d4b6216e664fb2d9577a3cc7bc6, type: 3}
-  m_PrefabInstance: {fileID: 1773571912}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c1559b98f90b6e944b9587440ed63dd7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AutoGun
 --- !u!1001 &772337664
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1120,5 +1048,5 @@ SceneRoots:
   - {fileID: 162618778}
   - {fileID: 1773571912}
   - {fileID: 1144718315}
-  - {fileID: 315587678}
   - {fileID: 772337664}
+  - {fileID: 481264432}

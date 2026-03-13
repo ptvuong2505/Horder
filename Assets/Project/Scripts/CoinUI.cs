@@ -3,8 +3,9 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// CoinUI – Hiển thị icon + số coins realtime trên HUD.
-/// Gắn vào Canvas > CoinUI object.
+/// CoinUI
+/// Hiển thị coins realtime bằng cách lắng nghe GameManager.OnCoinsChanged.
+/// Có hiệu ứng "punch" scale nhẹ mỗi khi số coins thay đổi.
 /// </summary>
 public class CoinUI : MonoBehaviour
 {
@@ -36,6 +37,7 @@ public class CoinUI : MonoBehaviour
 
     void Update()
     {
+        // Animation nhỏ để tạo cảm giác "nhặt được tiền".
         if (punchTimer > 0f)
         {
             punchTimer -= Time.deltaTime;
@@ -43,7 +45,9 @@ public class CoinUI : MonoBehaviour
             float scale = Mathf.Lerp(1.3f, 1f, t);
             transform.localScale = originalScale * scale;
         }
-    }    void UpdateCoinText(int newCoins)
+    }
+
+    void UpdateCoinText(int newCoins)
     {
         if (coinText != null)
             coinText.text = newCoins.ToString();

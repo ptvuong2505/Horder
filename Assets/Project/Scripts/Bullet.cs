@@ -1,5 +1,14 @@
 using UnityEngine;
 
+/// <summary>
+/// Bullet
+/// - Bay theo trục local "right" (transform.right).
+/// - Va chạm Enemy/BossEnemy thì gọi Hit(damage) rồi tự hủy.
+/// 
+/// Mở rộng về sau:
+/// - Thêm xuyên mục tiêu (pierce), nổ AOE, hiệu ứng burn/poison/freeze...
+/// - Dùng layer mask thay vì tag để tối ưu/ổn định hơn.
+/// </summary>
 public class Bullet : MonoBehaviour
 {
     public float speed = 12f;

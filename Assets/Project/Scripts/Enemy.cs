@@ -1,6 +1,18 @@
 using System.Collections;
 using UnityEngine;
 
+/// <summary>
+/// Enemy (melee chaser)
+/// - Di chuyển về phía Player bằng Rigidbody2D.velocity.
+/// - Khi dính đạn: Hit(damage) -> trừ máu -> Die() nếu <= 0.
+/// - Khi chết:
+///   + Disable collider, stop movement
+///   + Báo GameManager.RegisterKill() để cộng score/coins
+///   + Báo EnemyManager.UnregisterEnemy() để wave biết còn bao nhiêu enemy sống
+///   + TrySpawnPickup()
+///   + Chạy hiệu ứng fade rồi Destroy
+/// - Khi chạm Player: gây damage theo cooldown.
+/// </summary>
 public class Enemy : MonoBehaviour
 {
     public int maxHealth;
@@ -89,11 +101,13 @@ public class Enemy : MonoBehaviour
         if (isDead) return;
         isDead = true;
 
-        // Dừng di chuyển
+        // Dừng di chuyển để tránh enemy "trượt" trong lúc đang chết.
         if (rb != null)
             rb.linearVelocity = Vector2.zero;
 
-        // Tắt collider để không bị tấn công / tấn công player nữa
+        // Tắt collider để:
+        // - không còn gây damage cho Player
+        // - không còn bị Bullet trigger nhiều lần
         var col = GetComponent<Collider2D>();
         if (col != null) col.enabled = false;
 

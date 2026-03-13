@@ -1,8 +1,19 @@
 using UnityEngine;
 
 /// <summary>
-/// AudioManager – Singleton quản lý toàn bộ audio trong game.
-/// Gắn vào 1 GameObject trong scene đầu tiên (Menu), DontDestroyOnLoad.
+/// AudioManager (Singleton)
+/// Trách nhiệm:
+/// - Cung cấp 1 nơi duy nhất để play SFX/BGM.
+/// - Giữ audio xuyên scene (DontDestroyOnLoad).
+/// 
+/// Quy ước dùng trong code:
+/// - Gameplay gọi các method dạng PlayXxx() (PlayEnemyHit, PlayWaveClear...).
+/// - Với súng: AutoGun gọi PlayShoot(overrideClip) để mỗi loại súng có SFX riêng.
+/// 
+/// Gợi ý mở rộng:
+/// - Pooling/Limit số SFX đồng thời.
+/// - Fade in/out BGM khi đổi scene.
+/// - Lưu volume vào PlayerPrefs.
 /// </summary>
 public class AudioManager : MonoBehaviour
 {
@@ -92,7 +103,6 @@ public class AudioManager : MonoBehaviour
     public void PlayBGM(AudioClip clip)
     {
         if (clip == null || bgmSource == null) return;
-        if (bgmSource.clip == clip && bgmSource.isPlaying) return;
 
         bgmSource.clip = clip;
         bgmSource.volume = bgmVolume;

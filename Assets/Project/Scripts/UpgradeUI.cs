@@ -5,8 +5,13 @@ using UnityEngine.UI;
 using TMPro;
 
 /// <summary>
-/// UpgradeUI – Hiển thị 3 card upgrade để player chọn.
-/// Gắn vào Canvas > UpgradeUI panel.
+/// UpgradeUI
+/// View/UI-only: chỉ hiển thị 3 lựa chọn và gọi callback khi click.
+/// Logic random/apply upgrade nằm ở UpgradeManager.
+/// 
+/// ShowCards(options, callback):
+/// - options: list UpgradeData được chọn sẵn.
+/// - callback: invoked khi user click card.
 /// </summary>
 public class UpgradeUI : MonoBehaviour
 {

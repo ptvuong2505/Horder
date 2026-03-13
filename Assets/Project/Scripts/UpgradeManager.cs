@@ -3,9 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// UpgradeManager – Singleton quản lý hệ thống upgrade in-run.
-/// Khi wave clear → pick 3 random upgrades → show UI → pause game.
-/// Gắn vào GameManager hoặc 1 GameObject riêng trong scene.
+/// UpgradeManager (Singleton)
+/// Hệ upgrade "trong run":
+/// - Khi GameManager báo WaveClear -> ShowUpgradeSelection()
+/// - Random 3 UpgradeData, pause game (Time.timeScale = 0)
+/// - Player chọn 1 card -> ApplyUpgrade() -> resume
+/// 
+/// IsSelecting:
+/// - Được EnemySpawner dùng để "đợi" người chơi chọn xong trước khi sang wave.
 /// </summary>
 public class UpgradeManager : MonoBehaviour
 {

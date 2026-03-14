@@ -88,7 +88,6 @@ public class EnemySpawner : MonoBehaviour
         yield return new WaitForSeconds(wave.delayBeforeWave);
 
         OnWaveStarted?.Invoke(currentWaveIndex);
-
         // Spawn từng con
         foreach (EnemySpawnInfo info in wave.enemies)
         {
@@ -115,7 +114,6 @@ public class EnemySpawner : MonoBehaviour
         yield return new WaitUntil(() => GameObject.FindGameObjectsWithTag("Enemy").Length == 0);
 
         Debug.Log($"[EnemySpawner] Wave {currentWaveIndex + 1} CLEAR! Sang wave tiếp...");
-
         // Báo GameManager (nếu có) → sẽ trigger upgrade UI
         if (GameManager.Instance != null)
             GameManager.Instance.HandleWaveClear();

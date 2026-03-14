@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -155,7 +156,20 @@ public class GameManager : MonoBehaviour
         OnStateChanged?.Invoke(state);
         Debug.Log("[GameManager] Level Clear! Chuyển sang màn kế tiếp...");
 
-        Invoke(nameof(LoadNextLevel), 3f);
+        StartCoroutine(LevelClearSequence());
+    }
+
+    IEnumerator LevelClearSequence()
+    {
+        float delay = 3f;
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayLevelClear();
+            delay = AudioManager.Instance.GetLevelClearClipLength();
+        }
+
+        yield return new WaitForSecondsRealtime(Mathf.Max(0.5f, delay));
+        LoadNextLevel();
     }
 
     void LoadNextLevel()
@@ -223,18 +237,25 @@ public class GameManager : MonoBehaviour
         state = GameState.GameOver;
         OnStateChanged?.Invoke(state);
 
-        // SFX game over
-        if (AudioManager.Instance != null)
-            AudioManager.Instance.PlayGameOver();
-
         Debug.Log($"[GameManager] Game Over! Coins: {coins}, Scrap: {scrap}");
-
-        // Lưu dữ liệu cần thiết để GameOverScene hiển thị
         PlayerPrefs.SetInt("FinalCoins", coins);
         PlayerPrefs.SetInt("FinalScrap", scrap);
         PlayerPrefs.Save();
 
-        Invoke(nameof(LoadGameOverScene), 2f);
+        StartCoroutine(GameOverSequence());
+    }
+
+    IEnumerator GameOverSequence()
+    {
+        float delay = 2f;
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayGameOver();
+            delay = AudioManager.Instance.GetGameOverClipLength();
+        }
+
+        yield return new WaitForSecondsRealtime(Mathf.Max(0.5f, delay));
+        LoadGameOverScene();
     }
 
     void LoadGameOverScene()

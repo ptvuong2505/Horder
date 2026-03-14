@@ -56,7 +56,7 @@ public class GunCardUI : MonoBehaviour
             descText.text = string.IsNullOrEmpty(data.description) ? "" : data.description;
 
         if (costText != null)
-            costText.text = data.unlockedByDefault ? "Miễn phí" : $"{data.unlockCost} Coin";
+            costText.text = data.unlockedByDefault ? "Free" : $"{data.unlockCost} Coins";
 
         // Gán callback cho button
         if (buyButton != null)
@@ -84,7 +84,7 @@ public class GunCardUI : MonoBehaviour
                 buyButton.colors = cb;
             }
             if (buyButtonLabel != null)
-                buyButtonLabel.text = "ĐÃ SỞ HỮU";
+                buyButtonLabel.text = "OWNED";
         }
         else
         {
@@ -100,8 +100,8 @@ public class GunCardUI : MonoBehaviour
             }
             if (buyButtonLabel != null)
                 buyButtonLabel.text = canAfford
-                    ? $"MUA ({data.unlockCost} Coin)"
-                    : $"THIẾU COIN ({data.unlockCost})";
+                    ? $"BUY ({data.unlockCost} Coins)"
+                    : "NOT ENOUGH COINS";
         }
     }
 }

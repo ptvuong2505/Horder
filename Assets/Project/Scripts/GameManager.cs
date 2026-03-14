@@ -72,6 +72,9 @@ public class GameManager : MonoBehaviour
             enemySpawner.OnAllWavesCompleted += HandleAllWavesCompleted;
         }
         // EnemySpawner tự Start() → không cần gọi StartNextWave() ở đây
+
+        // Đồng bộ UI coin ngay khi vào scene (coin có thể đã được load từ PlayerPrefs)
+        OnCoinsChanged?.Invoke(coins);
     }
 
     void OnDestroy()

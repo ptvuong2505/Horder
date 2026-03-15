@@ -3,9 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// WeaponManager – Gắn vào Player.
-/// Quản lý 4 khẩu súng, tất cả cùng bắn enemy gần nhất đồng thời.
-/// Mỗi AutoGun tự xoay và tự bắn độc lập.
+/// WeaponManager (gắn lên Player)
+/// Quản lý các khẩu AutoGun con (gun slots) và gán GunData tương ứng.
+/// 
+/// Setup chuẩn:
+/// - Player
+///   - GunSlot_0 (AutoGun)
+///   - GunSlot_1 (AutoGun)
+///   - GunSlot_2 (AutoGun)
+///   - GunSlot_3 (AutoGun)
+/// 
+/// Vì sao dùng Awake?
+/// - Để gọi AutoGun.Setup(GunData) trước khi AutoGun.Start()/Update chạy,
+///   tránh trường hợp gunData = null ở frame đầu.
 /// </summary>
 public class WeaponManager : MonoBehaviour
 {

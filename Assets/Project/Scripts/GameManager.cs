@@ -1,3 +1,4 @@
+using Assets.Project.Scripts;
 using System;
 using System.Collections;
 using UnityEngine;
@@ -64,6 +65,11 @@ public class GameManager : MonoBehaviour
     public event Action<GameState> OnStateChanged;
 
     // ──────────────────────────────────────────────
+    // Selected Player
+    // ──────────────────────────────────────────────
+    public PlayerData selectedPlayer;  // Fallback khi không có PlayerSelectManager
+
+
     void Awake()
     {
         if (Instance == null)
@@ -74,6 +80,16 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        // Ưu tiên lấy player từ PlayerSelectManager; fallback về field selectedPlayer
+        PlayerData data = (PlayerSelectManager.Instance != null && PlayerSelectManager.Instance.SelectedPlayer != null)
+            ? PlayerSelectManager.Instance.SelectedPlayer
+            : selectedPlayer;
+
+        GameObject obj = Instantiate(data.playerPrefab);
+        Player player = obj.GetComponent<Player>();
+
+        player.Initialize(data);
+
         // Đăng ký lắng nghe EnemyManager
         if (EnemyManager.Instance != null)
             EnemyManager.Instance.OnAllEnemiesDead += HandleAllEnemiesDead;
@@ -156,6 +172,11 @@ public class GameManager : MonoBehaviour
         OnStateChanged?.Invoke(state);
         Debug.Log("[GameManager] Level Clear! Chuyển sang màn kế tiếp...");
 
+        // Lưu coins kiếm được vào SaveSystem
+        if (PlayerSelectManager.Instance != null)
+            PlayerSelectManager.Instance.AddGold(coins);
+
+        Invoke(nameof(LoadNextLevel), 3f);
         StartCoroutine(LevelClearSequence());
     }
 
@@ -237,6 +258,15 @@ public class GameManager : MonoBehaviour
         state = GameState.GameOver;
         OnStateChanged?.Invoke(state);
 
+        // SFX game over
+        if (AudioManager.Instance != null)
+            AudioManager.Instance.PlayGameOver();
+
+        // Lưu coins kiếm được vào SaveSystem
+        if (PlayerSelectManager.Instance != null)
+            PlayerSelectManager.Instance.AddGold(coins);
+
+        // Lưu coins để GameOverScene hiển thị
         Debug.Log($"[GameManager] Game Over! Coins: {coins}, Scrap: {scrap}");
         PlayerPrefs.SetInt("FinalCoins", coins);
         PlayerPrefs.SetInt("FinalScrap", scrap);

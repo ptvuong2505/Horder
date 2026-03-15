@@ -23,8 +23,11 @@ public class GameOverManager : MonoBehaviour
     // Gắn vào Button "Play Again"
     public void OnPlayAgain()
     {
+        PlayerPrefs.DeleteKey("FinalScore");
         PlayerPrefs.DeleteKey("FinalCoins");
-        PlayerPrefs.DeleteKey("FinalScrap");
+        GameManager.ClearSavedCoins();
+        GunShop.ClearSavedUnlocks();
+        WeaponManager.ClearSavedEquippedGun();
         SceneManager.LoadScene("Level1");
     }
 

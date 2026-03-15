@@ -20,8 +20,11 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
+    const string SavedCoinsKey = "SavedCoins";
+
     [Header("References")]
     public EnemySpawner enemySpawner;
+    public GunShopUI gunShopUI;          // Gán GunShopUI panel
 
     [Header("Level Config")]
     public LevelConfig levelConfig;     // Gán cùng LevelConfig với EnemySpawner
@@ -75,7 +78,13 @@ public class GameManager : MonoBehaviour
         if (Instance == null)
             Instance = this;
         else
+        {
             Destroy(gameObject);
+            return;
+        }
+
+        // Đọc coin đã lưu từ lần chơi trước
+        coins = PlayerPrefs.GetInt(SavedCoinsKey, 0);
     }
 
     void Start()
@@ -101,6 +110,9 @@ public class GameManager : MonoBehaviour
             enemySpawner.OnAllWavesCompleted += HandleAllWavesCompleted;
         }
         // EnemySpawner tự Start() → không cần gọi StartNextWave() ở đây
+
+        // Đồng bộ UI coin ngay khi vào scene (coin có thể đã được load từ PlayerPrefs)
+        OnCoinsChanged?.Invoke(coins);
     }
 
     void OnDestroy()
@@ -153,9 +165,12 @@ public class GameManager : MonoBehaviour
         if (AudioManager.Instance != null)
             AudioManager.Instance.PlayWaveClear();
 
-        // Hiện upgrade selection (nếu có UpgradeManager)
+        // Hiện upgrade selection (nếu có UpgradeManager).
+        // Gun shop chỉ mở thủ công bằng phím G.
         if (UpgradeManager.Instance != null)
+        {
             UpgradeManager.Instance.ShowUpgradeSelection();
+        }
 
         Debug.Log($"[GameManager] Wave {currentWave} clear!");
     }
@@ -211,6 +226,25 @@ public class GameManager : MonoBehaviour
     {
         coins += amount;
         OnCoinsChanged?.Invoke(coins);
+        PlayerPrefs.SetInt(SavedCoinsKey, coins);
+        PlayerPrefs.Save();
+    }
+
+    /// <summary>Trừ coin (dùng khi mua súng hoặc upgrade). Trả về true nếu đủ coin.</summary>
+    public bool SpendCoins(int amount)
+    {
+        if (coins < amount) return false;
+        coins -= amount;
+        OnCoinsChanged?.Invoke(coins);
+        PlayerPrefs.SetInt(SavedCoinsKey, coins);
+        PlayerPrefs.Save();
+        return true;
+    }
+
+    public static void ClearSavedCoins()
+    {
+        PlayerPrefs.DeleteKey(SavedCoinsKey);
+        PlayerPrefs.Save();
     }
 
     // ──────────────────────────────────────────────

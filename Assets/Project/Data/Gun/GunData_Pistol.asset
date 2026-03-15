@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: GunData_Pistol
   m_EditorClassIdentifier: Assembly-CSharp::GunData
   gunName: Pistol
-  gunSprite: {fileID: 0}
+  gunSprite: {fileID: 7178455622637644083, guid: f7d23e09f577e24499e4235819d55622, type: 3}
   bulletPrefab: {fileID: 8073157801147965921, guid: 6ba60d5b0f4245e4083fec371c693668, type: 3}
-  damage: 8
+  damage: 100
   bulletSpeed: 14
   bulletLifeTime: 2
   fireRate: 0.45
@@ -25,3 +25,7 @@ MonoBehaviour:
   positionOffset: {x: 1, y: 0}
   muzzleFlashPrefab: {fileID: 0}
   muzzleFlashDuration: 0.05
+  shootSFX: {fileID: 0}
+  unlockedByDefault: 1
+  unlockCost: 100
+  description: 

@@ -23,10 +23,16 @@ public class CoinUI : MonoBehaviour
     {
         originalScale = transform.localScale;
 
-        UpdateCoinText(0);
-
         if (GameManager.Instance != null)
+        {
             GameManager.Instance.OnCoinsChanged += UpdateCoinText;
+            // Show real loaded coins immediately (avoid always showing 0 at startup)
+            UpdateCoinText(GameManager.Instance.Coins);
+        }
+        else
+        {
+            UpdateCoinText(0);
+        }
     }
 
     void OnDestroy()

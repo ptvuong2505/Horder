@@ -345,9 +345,7 @@ public class BossEnemy : MonoBehaviour
 
         OnBossDied?.Invoke();
 
-        // Score
-        if (GameManager.Instance != null)
-            GameManager.Instance.AddScore(200);
+        // Score removed per request
 
         // Death effect
         StartCoroutine(DeathEffect());

@@ -1,6 +1,20 @@
 using System.Collections;
 using UnityEngine;
 
+/// <summary>
+/// AutoGun
+/// "Súng tự động" xoay theo enemy gần nhất và tự bắn theo fireRate.
+/// 
+/// Luồng hoạt động:
+/// - WeaponManager.Setup() gọi Setup(GunData) để gán cấu hình súng.
+/// - Update(): tìm target gần nhất trong bán kính detectRange, xoay hướng, bắn theo cooldown.
+/// - Damage/FireRate có modifier runtime (damageMultiplier, fireRateMultiplier) để upgrade/pickup tác động.
+/// 
+/// Lưu ý hiệu năng:
+/// - FindNearestEnemy() hiện dùng GameObject.FindGameObjectsWithTag("Enemy") mỗi frame.
+///   Khi enemy đông sẽ hao CPU/GC.
+///   Hướng nâng cấp: EnemyManager cung cấp danh sách/nearby query hoặc dùng Physics2D.OverlapCircleNonAlloc.
+/// </summary>
 public class AutoGun : MonoBehaviour
 {
     [Header("Gun Data")]

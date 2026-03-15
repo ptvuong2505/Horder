@@ -3764,6 +3764,73 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1457269358}
   m_CullTransparentMesh: 1
+--- !u!1 &1494734536
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1494734538}
+  - component: {fileID: 1494734537}
+  m_Layer: 0
+  m_Name: AudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1494734537
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1494734536}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: daa6cf4ce2d8665438b27b978b7a224c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AudioManager
+  sfxSource: {fileID: 0}
+  announceSource: {fileID: 0}
+  bgmSource: {fileID: 0}
+  shootSFX: {fileID: 8300000, guid: 809e8969d290a344692abc992781cc2d, type: 3}
+  enemyHitSFX: {fileID: 8300000, guid: 75a0cace23c361444b5e931916dd118c, type: 3}
+  enemyDieSFX: {fileID: 0}
+  playerHitSFX: {fileID: 0}
+  waveStartSFX: {fileID: 8300000, guid: 09b9936fbd07d3f4c9eec84a320d73ed, type: 3}
+  waveClearSFX: {fileID: 8300000, guid: 833ab67e7700e00499182faa331aa7aa, type: 3}
+  levelClearSFX: {fileID: 8300000, guid: 456e45d1127f97d48b2b61d069ffd054, type: 3}
+  pickupSFX: {fileID: 0}
+  upgradeSFX: {fileID: 0}
+  explosionSFX: {fileID: 0}
+  gameOverSFX: {fileID: 8300000, guid: fbb55f18a6b79394583b5f01960ee7c3, type: 3}
+  menuBGM: {fileID: 0}
+  gameplayBGM: {fileID: 0}
+  sfxVolume: 1
+  bgmVolume: 0.5
+  waveStartVolumeMultiplier: 1.25
+  waveClearVolumeMultiplier: 1.25
+  duckGameplaySfxDuringAnnounce: 1
+  gameplayDuckMultiplier: 0.35
+  announceDuckDuration: 0.8
+--- !u!4 &1494734538
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1494734536}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1497000851
 GameObject:
   m_ObjectHideFlags: 0
@@ -4771,3 +4838,4 @@ SceneRoots:
   - {fileID: 1711907}
   - {fileID: 1887683627}
   - {fileID: 200261171}
+  - {fileID: 1494734538}

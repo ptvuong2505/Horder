@@ -3,36 +3,36 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GameOverManager : MonoBehaviour
-{    [Header("UI")]
-    public TextMeshProUGUI finalScoreText;  // Gán Text hiển thị điểm
+{
+    [Header("UI")]
     public TextMeshProUGUI finalCoinsText;  // Gán Text hiển thị coins
+    public TextMeshProUGUI finalScrapText;  // Gán Text hiển thị scrap (tiền trong run)
 
     void Start()
     {
-        // Đọc điểm & coins đã lưu từ GameManager
-        int finalScore = PlayerPrefs.GetInt("FinalScore", 0);
         int finalCoins = PlayerPrefs.GetInt("FinalCoins", 0);
-
-        if (finalScoreText != null)
-            finalScoreText.text = $"Score: {finalScore}";
+        int finalScrap = PlayerPrefs.GetInt("FinalScrap", 0);
 
         if (finalCoinsText != null)
             finalCoinsText.text = $"💰 {finalCoins}";
+
+        if (finalScrapText != null)
+            finalScrapText.text = $"🧩 {finalScrap}";
     }
 
     // Gắn vào Button "Play Again"
     public void OnPlayAgain()
     {
-        PlayerPrefs.DeleteKey("FinalScore");
         PlayerPrefs.DeleteKey("FinalCoins");
+        PlayerPrefs.DeleteKey("FinalScrap");
         SceneManager.LoadScene("Level1");
     }
 
     // Gắn vào Button "Back to Menu"
     public void OnBackToMenu()
     {
-        PlayerPrefs.DeleteKey("FinalScore");
         PlayerPrefs.DeleteKey("FinalCoins");
+        PlayerPrefs.DeleteKey("FinalScrap");
         SceneManager.LoadScene("Menu");
     }
 }

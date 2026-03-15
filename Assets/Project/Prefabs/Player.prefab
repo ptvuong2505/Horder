@@ -46,8 +46,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1559b98f90b6e944b9587440ed63dd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AutoGun
-  muzzlePosition: {fileID: 9140997985593618148}
   gunData: {fileID: 0}
+  muzzlePosition: {fileID: 9140997985593618148}
+  muzzleFlash: {fileID: 0}
+  damageMultiplier: 1
+  fireRateMultiplier: 1
 --- !u!212 &6388364473138058513
 SpriteRenderer:
   serializedVersion: 2
@@ -397,8 +400,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1559b98f90b6e944b9587440ed63dd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AutoGun
-  muzzlePosition: {fileID: 1569846035393073784}
   gunData: {fileID: 0}
+  muzzlePosition: {fileID: 1569846035393073784}
+  muzzleFlash: {fileID: 0}
+  damageMultiplier: 1
+  fireRateMultiplier: 1
 --- !u!212 &2955456281237165918
 SpriteRenderer:
   serializedVersion: 2
@@ -626,8 +632,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1559b98f90b6e944b9587440ed63dd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AutoGun
-  muzzlePosition: {fileID: 4520248003759097237}
   gunData: {fileID: 0}
+  muzzlePosition: {fileID: 4520248003759097237}
+  muzzleFlash: {fileID: 0}
+  damageMultiplier: 1
+  fireRateMultiplier: 1
 --- !u!212 &2667100449543985777
 SpriteRenderer:
   serializedVersion: 2
@@ -733,8 +742,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1559b98f90b6e944b9587440ed63dd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AutoGun
-  muzzlePosition: {fileID: 7412252188085266026}
   gunData: {fileID: 0}
+  muzzlePosition: {fileID: 7412252188085266026}
+  muzzleFlash: {fileID: 0}
+  damageMultiplier: 1
+  fireRateMultiplier: 1
 --- !u!212 &7570451601670783496
 SpriteRenderer:
   serializedVersion: 2
@@ -1072,6 +1084,7 @@ GameObject:
   - component: {fileID: 4526433936020546242}
   - component: {fileID: 4255064182236347336}
   - component: {fileID: 5000000000000000001}
+  - component: {fileID: 2572846587259918834}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -1114,6 +1127,7 @@ MonoBehaviour:
   speed: 10
   maxHealth: 100
   currentHealth: 0
+  invulnerable: 0
 --- !u!50 &8434598569390165347
 Rigidbody2D:
   serializedVersion: 5
@@ -1199,7 +1213,19 @@ MonoBehaviour:
     m_ActionId: b7230bb6-fc9b-4f52-8b25-f5e19cb2c2ba
     m_ActionName: 'Player/Next[/Keyboard/2]'
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2572846587259918834}
+        m_TargetAssemblyTypeName: DashController2D, Assembly-CSharp
+        m_MethodName: OnSprint
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 641cd816-40e6-41b4-8c3d-04687c349290
     m_ActionName: 'Player/Sprint[/Keyboard/leftShift]'
   - m_PersistentCalls:
@@ -1353,3 +1379,24 @@ MonoBehaviour:
   - {fileID: 11400000, guid: f723b6663a9961f4abddbeb6d4977e9f, type: 2}
   - {fileID: 11400000, guid: 7ac25aee58f5a4741ae5e48d23c9d3f0, type: 2}
   - {fileID: 11400000, guid: 8d3dd795a6f5e1f4f8bddde9ee215231, type: 2}
+--- !u!114 &2572846587259918834
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9055494301083542674}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4bc60cd7f641d84488e9fcd434c7594e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DashController2D
+  dashSpeed: 20
+  dashDuration: 0.12
+  dashCooldown: 0.8
+  invulnerableDuringDash: 1
+  staminaMax: 100
+  stamina: 100
+  staminaDashCost: 35
+  staminaRegenPerSecond: 30
+  staminaRegenDelayAfterDash: 0.25

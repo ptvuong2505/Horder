@@ -271,8 +271,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0.0014191}
-  m_SizeDelta: {x: 800, y: 376.74}
+  m_AnchoredPosition: {x: 6.662, y: 0.000019073}
+  m_SizeDelta: {x: 813.3241, y: 450}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4488398086565831765
 CanvasRenderer:
@@ -360,6 +360,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab3e4c06f0b4a23488725341830a86e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameOverManager
+  finalScoreText: {fileID: 0}
+  finalCoinsText: {fileID: 0}
 --- !u!1 &9053379290193165714
 GameObject:
   m_ObjectHideFlags: 0

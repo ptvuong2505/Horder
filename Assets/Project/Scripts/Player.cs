@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.Project.Scripts;
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -38,6 +39,18 @@ public class Player : MonoBehaviour
     public void AddSpeed(float amount)
     {
         speed += amount;
+    }
+
+    public void Initialize(PlayerData data)
+    {
+        maxHealth = data.maxHealth;
+        currentHealth = maxHealth;
+        speed = data.speed;
+
+        if (data.animator != null)
+            animator.runtimeAnimatorController = data.animator;
+
+        OnHealthChanged?.Invoke(currentHealth, maxHealth);
     }
 
     void Awake()

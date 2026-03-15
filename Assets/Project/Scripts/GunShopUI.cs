@@ -94,6 +94,7 @@ public class GunShopUI : MonoBehaviour
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        EnsureEventSystem();
         RebindSceneReferences();
 
         if (cardArea != null && GunShop.Instance != null)
@@ -117,6 +118,12 @@ public class GunShopUI : MonoBehaviour
         boundGunShop = GunShop.Instance;
         boundWeaponManager = FindFirstObjectByType<WeaponManager>();
 
+        bool shouldShowWeaponHud = currentWeaponHudText != null &&
+                                   boundGameManager != null &&
+                                   boundWeaponManager != null;
+        if (currentWeaponHudText != null)
+            currentWeaponHudText.gameObject.SetActive(shouldShowWeaponHud);
+
         if (boundGameManager != null)
         {
             boundGameManager.OnCoinsChanged += OnCoinsChanged;
@@ -139,7 +146,8 @@ public class GunShopUI : MonoBehaviour
 
     void Update()
     {
-        if (GameManager.Instance != null &&
+        // Block shop outside gameplay (no GameManager = menu/game-over scene)
+        if (GameManager.Instance == null ||
             GameManager.Instance.State == GameManager.GameState.GameOver) return;
 
         // Hardcode gKey to avoid Key enum reset issue in Inspector
@@ -405,6 +413,11 @@ public class GunShopUI : MonoBehaviour
     void UpdateCurrentWeaponHUD(GunData data)
     {
         if (currentWeaponHudText == null) return;
+
+        bool shouldShowWeaponHud = boundGameManager != null && boundWeaponManager != null;
+        currentWeaponHudText.gameObject.SetActive(shouldShowWeaponHud);
+        if (!shouldShowWeaponHud) return;
+
         currentWeaponHudText.text = data != null
             ? $"Weapon: {data.gunName}  |  Keys: 1-4"
             : "Weapon: None  |  Keys: 1-4";

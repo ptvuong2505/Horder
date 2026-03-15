@@ -10,6 +10,8 @@ using UnityEngine.InputSystem;
 /// </summary>
 public class WeaponManager : MonoBehaviour
 {
+    const string EquippedGunKey = "EquippedGun";
+
     [Header("Gun Slots (4 khẩu, gắn AutoGun prefab vào đây)")]
     public List<AutoGun> guns = new List<AutoGun>();  // Gán 4 child AutoGun object
 
@@ -105,6 +107,13 @@ public class WeaponManager : MonoBehaviour
             return;
         }
 
+        int savedIndex = PlayerPrefs.GetInt(EquippedGunKey, -1);
+        if (savedIndex >= 0 && savedIndex < guns.Count && GunShop.Instance.IsUnlocked(savedIndex))
+        {
+            EquipOnly(savedIndex);
+            return;
+        }
+
         for (int i = 0; i < guns.Count; i++)
         {
             if (GunShop.Instance.IsUnlocked(i))
@@ -120,6 +129,8 @@ public class WeaponManager : MonoBehaviour
             if (guns[i] != null) guns[i].gameObject.SetActive(false);
         }
         currentIndex = -1;
+        PlayerPrefs.DeleteKey(EquippedGunKey);
+        PlayerPrefs.Save();
         Debug.LogWarning("[WeaponManager] Chưa có súng nào được mở khóa.");
     }
 
@@ -148,6 +159,8 @@ public class WeaponManager : MonoBehaviour
         }
 
         currentIndex = index;
+        PlayerPrefs.SetInt(EquippedGunKey, index);
+        PlayerPrefs.Save();
         GunData data = (index >= 0 && index < gunDataList.Count) ? gunDataList[index] : null;
         OnWeaponChanged?.Invoke(index, data);
         Debug.Log($"[WeaponManager] Trang bị súng [{index + 1}]: {data?.gunName}");
@@ -160,4 +173,10 @@ public class WeaponManager : MonoBehaviour
     public GunData CurrentGunData =>
         (currentIndex >= 0 && currentIndex < gunDataList.Count) ? gunDataList[currentIndex] : null;
     public int GunCount => guns.Count;
+
+    public static void ClearSavedEquippedGun()
+    {
+        PlayerPrefs.DeleteKey(EquippedGunKey);
+        PlayerPrefs.Save();
+    }
 }

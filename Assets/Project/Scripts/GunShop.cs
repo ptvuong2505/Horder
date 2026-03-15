@@ -10,6 +10,9 @@ public class GunShop : MonoBehaviour
 {
     public static GunShop Instance;
 
+    const string UnlockKeyPrefix = "GunUnlocked_";
+    const int MaxSavedGunSlots = 32;
+
     [Header("Danh sách súng trong kho (giống thứ tự WeaponManager.gunDataList)")]
     public List<GunData> allGuns = new List<GunData>();
 
@@ -37,13 +40,21 @@ public class GunShop : MonoBehaviour
         InitUnlockState();
     }
 
+    void OnDestroy()
+    {
+        if (Instance == this)
+            Instance = null;
+    }
+
     void InitUnlockState()
     {
         unlocked = new bool[allGuns.Count];
         for (int i = 0; i < allGuns.Count; i++)
         {
-            unlocked[i] = allGuns[i] != null &&
-                          (allGuns[i].unlockedByDefault || allGuns[i].unlockCost == 0);
+            bool defaultUnlocked = allGuns[i] != null &&
+                                   (allGuns[i].unlockedByDefault || allGuns[i].unlockCost == 0);
+            bool savedUnlocked = PlayerPrefs.GetInt(GetUnlockKey(i), 0) == 1;
+            unlocked[i] = defaultUnlocked || savedUnlocked;
         }
     }
 
@@ -107,6 +118,8 @@ public class GunShop : MonoBehaviour
 
         // Đánh dấu mở khóa
         unlocked[index] = true;
+    PlayerPrefs.SetInt(GetUnlockKey(index), 1);
+    PlayerPrefs.Save();
         Debug.Log($"[GunShop] Mở khóa thành công: {gun.gunName}");
 
         // Báo WeaponManager bật súng này
@@ -126,4 +139,14 @@ public class GunShop : MonoBehaviour
     {
         OnShopClosed?.Invoke();
     }
+
+    public static void ClearSavedUnlocks()
+    {
+        for (int i = 0; i < MaxSavedGunSlots; i++)
+            PlayerPrefs.DeleteKey(UnlockKeyPrefix + i);
+
+        PlayerPrefs.Save();
+    }
+
+    string GetUnlockKey(int index) => UnlockKeyPrefix + index;
 }

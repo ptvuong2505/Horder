@@ -25,6 +25,9 @@ public class GameOverManager : MonoBehaviour
     {
         PlayerPrefs.DeleteKey("FinalScore");
         PlayerPrefs.DeleteKey("FinalCoins");
+        GameManager.ClearSavedCoins();
+        GunShop.ClearSavedUnlocks();
+        WeaponManager.ClearSavedEquippedGun();
         SceneManager.LoadScene("Level1");
     }
 

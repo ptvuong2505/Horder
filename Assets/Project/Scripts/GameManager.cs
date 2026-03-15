@@ -11,6 +11,8 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
+    const string SavedCoinsKey = "SavedCoins";
+
     [Header("References")]
     public EnemySpawner enemySpawner;
     public GunShopUI gunShopUI;          // Gán GunShopUI panel
@@ -58,7 +60,7 @@ public class GameManager : MonoBehaviour
         }
 
         // Đọc coin đã lưu từ lần chơi trước
-        coins = PlayerPrefs.GetInt("SavedCoins", 0);
+        coins = PlayerPrefs.GetInt(SavedCoinsKey, 0);
     }
 
     void Start()
@@ -122,40 +124,14 @@ public class GameManager : MonoBehaviour
         if (AudioManager.Instance != null)
             AudioManager.Instance.PlayWaveClear();
 
-        // Hiện upgrade selection (nếu có UpgradeManager)
-        // Sau khi chọn upgrade xong → mở GunShop
+        // Hiện upgrade selection (nếu có UpgradeManager).
+        // Gun shop chỉ mở thủ công bằng phím G.
         if (UpgradeManager.Instance != null)
         {
-            UpgradeManager.Instance.OnUpgradeSelected += OpenGunShopAfterUpgrade;
             UpgradeManager.Instance.ShowUpgradeSelection();
-        }
-        else
-        {
-            // Không có upgrade → mở thẳng shop
-            OpenGunShop();
         }
 
         Debug.Log($"[GameManager] Wave {currentWave} clear! +{levelConfig?.bonusScorePerWave} điểm thưởng");
-    }
-
-    // ──────────────────────────────────────────────
-    //  Gun Shop
-    // ──────────────────────────────────────────────
-    void OpenGunShopAfterUpgrade()
-    {
-        // Hủy đăng ký để không bị gọi nhiều lần
-        if (UpgradeManager.Instance != null)
-            UpgradeManager.Instance.OnUpgradeSelected -= OpenGunShopAfterUpgrade;
-
-        OpenGunShop();
-    }
-
-    void OpenGunShop()
-    {
-        if (gunShopUI != null)
-            gunShopUI.OpenShop();
-        else
-            Debug.Log("[GameManager] Không có GunShopUI – bỏ qua shop.");
     }
 
     // Giữ lại để tương thích với EnemyManager event
@@ -198,7 +174,7 @@ public class GameManager : MonoBehaviour
     {
         coins += amount;
         OnCoinsChanged?.Invoke(coins);
-        PlayerPrefs.SetInt("SavedCoins", coins);
+        PlayerPrefs.SetInt(SavedCoinsKey, coins);
         PlayerPrefs.Save();
     }
 
@@ -208,9 +184,15 @@ public class GameManager : MonoBehaviour
         if (coins < amount) return false;
         coins -= amount;
         OnCoinsChanged?.Invoke(coins);
-        PlayerPrefs.SetInt("SavedCoins", coins);
+        PlayerPrefs.SetInt(SavedCoinsKey, coins);
         PlayerPrefs.Save();
         return true;
+    }
+
+    public static void ClearSavedCoins()
+    {
+        PlayerPrefs.DeleteKey(SavedCoinsKey);
+        PlayerPrefs.Save();
     }
 
     /// <summary>

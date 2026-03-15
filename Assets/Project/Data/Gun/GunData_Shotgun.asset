@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: GunData_Shotgun
   m_EditorClassIdentifier: Assembly-CSharp::GunData
   gunName: Shotgun
-  gunSprite: {fileID: 5032395067365248511, guid: eb1b4cd8668b12147a12b0cb09f0dbdd, type: 3}
+  gunSprite: {fileID: 0}
   bulletPrefab: {fileID: 8073157801147965921, guid: ff69235797a1abb44801e04d0a8b8bcb, type: 3}
   damage: 5
   bulletSpeed: 10
@@ -25,7 +25,3 @@ MonoBehaviour:
   positionOffset: {x: 1, y: 0}
   muzzleFlashPrefab: {fileID: 0}
   muzzleFlashDuration: 0.05
-  shootSFX: {fileID: 0}
-  unlockedByDefault: 0
-  unlockCost: 80
-  description: 

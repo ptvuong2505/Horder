@@ -32,9 +32,4 @@ public class GunData : ScriptableObject
 
     [Header("Audio")]
     public AudioClip shootSFX;            // SFX riêng cho từng khẩu, nếu null sẽ dùng default
-
-    [Header("Shop")]
-    public bool unlockedByDefault = false; // Pistol nên tick = true
-    public int unlockCost = 100;           // Giá mở khóa bằng coin (0 = miễn phí)
-    public string description = "";        // Mô tả ngắn hiển thị trên UI shop
 }

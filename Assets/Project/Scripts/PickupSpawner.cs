@@ -1,9 +1,20 @@
 using UnityEngine;
 
 /// <summary>
-/// PickupSpawner – Quản lý spawn pickup items khi enemy chết.
-/// Đặt static methods để Enemy.Die() gọi trực tiếp.
-/// Cần đặt 1 instance trong scene hoặc trên GameManager.
+/// PickupSpawner (Singleton)
+/// Quản lý tỉ lệ rơi item.
+/// 
+/// Cách hoạt động:
+/// - Enemy.Die() gọi PickupSpawner.TrySpawnPickup(pos)
+/// - SpawnPickup() roll 0..100 rồi đi theo thứ tự cumulative (health -> damage -> speed)
+///   => Các chance là "tương đối theo thứ tự" chứ không phải roll riêng từng loại.
+/// 
+/// Ví dụ:
+/// - health=15, damage=5, speed=5
+/// - roll 0..15: ra health
+/// - roll 15..20: ra damage
+/// - roll 20..25: ra speed
+/// - còn lại: không drop
 /// </summary>
 public class PickupSpawner : MonoBehaviour
 {

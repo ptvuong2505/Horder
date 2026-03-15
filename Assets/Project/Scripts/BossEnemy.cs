@@ -94,6 +94,11 @@ public class BossEnemy : MonoBehaviour
         if (EnemyManager.Instance != null)
             EnemyManager.Instance.RegisterEnemy(gameObject);
 
+        // Báo cho BossHealthBar hiển thị
+        BossHealthBar hpBar = FindFirstObjectByType<BossHealthBar>(FindObjectsInactive.Include);
+        if (hpBar != null)
+            hpBar.RegisterBoss(this);
+
         OnHealthChanged?.Invoke(currentHealth, maxHealth);
     }
 
@@ -340,9 +345,7 @@ public class BossEnemy : MonoBehaviour
 
         OnBossDied?.Invoke();
 
-        // Score
-        if (GameManager.Instance != null)
-            GameManager.Instance.AddScore(200);
+        // Score removed per request
 
         // Death effect
         StartCoroutine(DeathEffect());

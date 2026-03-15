@@ -2,54 +2,19 @@ using TMPro;
 using UnityEngine;
 
 /// <summary>
-/// ScoreUI – Hiển thị điểm số realtime.
-/// Gắn vào Canvas > ScoreUI object.
+/// ScoreUI
+/// (Deprecated) Score system đã bị remove.
+/// Script này được giữ lại để không làm vỡ scene/prefab cũ đang reference ScoreUI.
+/// Bạn có thể xóa hẳn component này khỏi Canvas khi dọn project.
 /// </summary>
 public class ScoreUI : MonoBehaviour
 {
     [Header("References")]
-    public TextMeshProUGUI scoreText;   // Text hiển thị điểm
+    public TextMeshProUGUI scoreText;
 
-    [Header("Animation")]
-    public bool punchOnScore = true;    // Scale nhanh khi cộng điểm
-    private Vector3 originalScale;
-    private float punchTimer = 0f;
-    private float punchDuration = 0.15f;
-
-    void Start()
-    {
-        originalScale = transform.localScale;
-
-        UpdateScoreText(0);
-
-        if (GameManager.Instance != null)
-            GameManager.Instance.OnScoreChanged += UpdateScoreText;
-    }
-
-    void OnDestroy()
-    {
-        if (GameManager.Instance != null)
-            GameManager.Instance.OnScoreChanged -= UpdateScoreText;
-    }
-
-    void Update()
-    {
-        if (punchTimer > 0f)
-        {
-            punchTimer -= Time.deltaTime;
-            float t = 1f - Mathf.Clamp01(punchTimer / punchDuration);
-            // Scale nhanh lên rồi về cũ
-            float scale = Mathf.Lerp(1.3f, 1f, t);
-            transform.localScale = originalScale * scale;
-        }
-    }
-
-    void UpdateScoreText(int newScore)
+    private void Start()
     {
         if (scoreText != null)
-            scoreText.text = $"Score: {newScore}";
-
-        if (punchOnScore)
-            punchTimer = punchDuration;
+            scoreText.text = string.Empty;
     }
 }

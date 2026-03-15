@@ -251,6 +251,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab3e4c06f0b4a23488725341830a86e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameOverManager
+  finalScoreText: {fileID: 0}
+  finalCoinsText: {fileID: 0}
 --- !u!1 &797298895
 GameObject:
   m_ObjectHideFlags: 0
@@ -535,6 +537,14 @@ PrefabInstance:
     - target: {fileID: 4942350665883932958, guid: 19121815dec7d3f44a8ef59e86857fc2, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 7102678672210807740, guid: 19121815dec7d3f44a8ef59e86857fc2, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 450
+      objectReference: {fileID: 0}
+    - target: {fileID: 7102678672210807740, guid: 19121815dec7d3f44a8ef59e86857fc2, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0.000494
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

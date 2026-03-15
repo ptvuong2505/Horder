@@ -2,8 +2,18 @@ using System.Collections;
 using UnityEngine;
 
 /// <summary>
-/// PickupItem – Item nhặt được: hồi HP, tăng damage, tăng speed, coin...
-/// Gắn lên prefab pickup item.
+/// PickupItem
+/// Vật phẩm rơi ra khi enemy chết.
+/// 
+/// Hiện hỗ trợ:
+/// - HealthPotion: hồi HP ngay.
+/// - DamageBoost: tăng damageMultiplier của tất cả AutoGun trong 1 khoảng thời gian.
+/// - SpeedBoost: tăng tốc chạy trong 1 khoảng thời gian.
+/// 
+/// Lưu ý:
+/// - DamageBoost đang "nhân" multiplier rồi sau đó "chia" lại để reset.
+///   Nếu nhặt chồng nhiều lần cùng lúc có thể khó kiểm soát (stacking).
+///   Về lâu dài nên có hệ BuffManager để quản lý stack/bộ đếm.
 /// </summary>
 public class PickupItem : MonoBehaviour
 {

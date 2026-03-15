@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e95d237b21b38fe418f32365a7eebf88, type: 3}
+  m_Name: PlayerData 2
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Project.Scripts.PlayerData
+  playerID: 2
+  playerName: Player 2
+  description: 
+  portrait: {fileID: 1096699559687569402, guid: fda7e6232bf6f6f48ac18e94378d5b5b, type: 3}
+  maxHealth: 200
+  speed: 15
+  unlockCost: 500
+  unlockedByDefault: 0
+  animator: {fileID: 0}
+  playerPrefab: {fileID: 0}

@@ -262,14 +262,11 @@ public class GameManager : MonoBehaviour
         if (AudioManager.Instance != null)
             AudioManager.Instance.PlayGameOver();
 
-        Debug.Log($"[GameManager] Game Over! Score: {score}");
-
         // Lưu coins kiếm được vào SaveSystem
         if (PlayerSelectManager.Instance != null)
             PlayerSelectManager.Instance.AddGold(coins);
 
-        // Lưu điểm & coins để GameOverScene hiển thị
-        PlayerPrefs.SetInt("FinalScore", score);
+        // Lưu coins để GameOverScene hiển thị
         Debug.Log($"[GameManager] Game Over! Coins: {coins}, Scrap: {scrap}");
         PlayerPrefs.SetInt("FinalCoins", coins);
         PlayerPrefs.SetInt("FinalScrap", scrap);

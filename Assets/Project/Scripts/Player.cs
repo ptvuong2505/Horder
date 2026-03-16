@@ -21,6 +21,10 @@ public class Player : MonoBehaviour
     Animator animator;
     Rigidbody2D rb;
 
+    public SpriteRenderer footR;
+    public SpriteRenderer footL;
+    public SpriteRenderer body;
+
     bool dead;
     public int maxHealth = 150;
     public int currentHealth;
@@ -62,7 +66,14 @@ public class Player : MonoBehaviour
         currentHealth = maxHealth;
         speed = data.speed;
 
-        animator = data.playerPrefab.GetComponent<Animator>();
+        // xóa face cũ
+        Transform face = body.transform.Find("Face");
+        if (face != null)
+            Destroy(face.gameObject);
+
+        body.sprite = data.playerPrefab.body.sprite;
+        footL.sprite = data.playerPrefab.footL.sprite;
+        footR.sprite = data.playerPrefab.footR.sprite;
 
         OnHealthChanged?.Invoke(currentHealth, maxHealth);
     }

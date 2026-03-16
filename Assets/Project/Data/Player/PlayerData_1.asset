@@ -20,5 +20,4 @@ MonoBehaviour:
   speed: 15
   unlockCost: 150
   unlockedByDefault: 0
-  animator: {fileID: 0}
-  playerPrefab: {fileID: 0}
+  playerPrefab: {fileID: 309440290348369974, guid: d5cc9f001872a274c98cf5b2bac444fc, type: 3}

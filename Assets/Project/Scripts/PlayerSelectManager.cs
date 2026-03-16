@@ -1,5 +1,6 @@
 ﻿using Assets.Project.Scripts;
 using System;
+using System.Linq;
 using UnityEngine;
 
 /// <summary>
@@ -9,8 +10,6 @@ using UnityEngine;
 /// </summary>
 public class PlayerSelectManager : MonoBehaviour
 {
-    public static PlayerSelectManager Instance;
-
     [Header("Data")]
     public PlayerRegistry playerRegistry;
 
@@ -20,20 +19,62 @@ public class PlayerSelectManager : MonoBehaviour
 
     public event Action OnSaveChanged;
 
+    public static PlayerSelectManager Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = FindObjectOfType<PlayerSelectManager>();
+
+                if (_instance == null)
+                {
+                    GameObject obj = new GameObject("PlayerSelectManager");
+                    _instance = obj.AddComponent<PlayerSelectManager>();
+                }
+            }
+
+            return _instance;
+        }
+    }
+
+    private static PlayerSelectManager _instance;
+
     void Awake()
     {
-        if (Instance == null)
-            Instance = this;
-        else
+        if (_instance == null)
+        {
+            _instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else if (_instance != this)
         {
             Destroy(gameObject);
             return;
         }
 
-        saveData = SaveSystem.Load();
+        if (playerRegistry == null)
+            playerRegistry = ResolvePlayerRegistry();
 
-        // Mở khóa mặc định nhung player có unlockedByDefault
+        if (playerRegistry == null)
+        {
+            Debug.LogError("[PlayerSelectManager] Missing PlayerRegistry. Assign it in inspector, place it in a Resources folder, or keep it at Assets/Project/Data/Player/PlayerRegistry.asset.");
+            saveData = SaveSystem.Load() ?? new SaveData();
+            return;
+        }
+
+        LoadData();
+    }
+
+    void LoadData()
+    {
+        saveData = SaveSystem.Load() ?? new SaveData();
+
+        if (saveData.unlockedPlayers == null)
+            saveData.unlockedPlayers = new System.Collections.Generic.List<string>();
+
         bool dirty = false;
+
         foreach (var p in playerRegistry.allPlayers)
         {
             if (p.unlockedByDefault && !saveData.unlockedPlayers.Contains(p.playerID))
@@ -42,15 +83,82 @@ public class PlayerSelectManager : MonoBehaviour
                 dirty = true;
             }
         }
-        if (dirty) SaveSystem.Save(saveData);
 
-        // Khôi ph?c player ?ã ch?n
+        if (dirty)
+            SaveSystem.Save(saveData);
+
         if (!string.IsNullOrEmpty(saveData.selectedPlayerId))
             SelectedPlayer = playerRegistry.GetByID(saveData.selectedPlayerId);
 
-        // Fallback: ch?n player ??u tiên ?ã m? khóa
-        if (SelectedPlayer == null && saveData.unlockedPlayers.Count > 0)
-            SelectedPlayer = playerRegistry.GetByID(saveData.unlockedPlayers[0]);
+        if (SelectedPlayer == null)
+            SelectedPlayer = GetPreferredOrDefaultPlayer();
+
+        if (SelectedPlayer != null && saveData.selectedPlayerId != SelectedPlayer.playerID)
+        {
+            saveData.selectedPlayerId = SelectedPlayer.playerID;
+            SaveSystem.Save(saveData);
+        }
+    }
+
+    public PlayerData GetPreferredOrDefaultPlayer()
+    {
+        if (SelectedPlayer != null)
+            return SelectedPlayer;
+
+        if (playerRegistry == null || playerRegistry.allPlayers == null || playerRegistry.allPlayers.Count == 0)
+            return null;
+
+        if (saveData != null && saveData.unlockedPlayers != null)
+        {
+            foreach (var id in saveData.unlockedPlayers)
+            {
+                var unlocked = playerRegistry.GetByID(id);
+                if (unlocked != null && unlocked.playerPrefab != null)
+                    return unlocked;
+            }
+        }
+
+        foreach (var p in playerRegistry.allPlayers)
+        {
+            if (p != null && p.unlockedByDefault && p.playerPrefab != null)
+                return p;
+        }
+
+        foreach (var p in playerRegistry.allPlayers)
+        {
+            if (p != null && p.playerPrefab != null)
+                return p;
+        }
+
+        return null;
+    }
+
+    private PlayerRegistry ResolvePlayerRegistry()
+    {
+        var registry = Resources.Load<PlayerRegistry>("PlayerRegistry");
+        if (registry != null)
+            return registry;
+
+        registry = Resources.LoadAll<PlayerRegistry>(string.Empty).FirstOrDefault();
+        if (registry != null)
+            return registry;
+
+#if UNITY_EDITOR
+        registry = UnityEditor.AssetDatabase.LoadAssetAtPath<PlayerRegistry>("Assets/Project/Data/Player/PlayerRegistry.asset");
+        if (registry != null)
+            return registry;
+
+        string[] guids = UnityEditor.AssetDatabase.FindAssets("t:PlayerRegistry");
+        if (guids != null && guids.Length > 0)
+        {
+            string path = UnityEditor.AssetDatabase.GUIDToAssetPath(guids[0]);
+            registry = UnityEditor.AssetDatabase.LoadAssetAtPath<PlayerRegistry>(path);
+            if (registry != null)
+                return registry;
+        }
+#endif
+
+        return null;
     }
 
     public int GetGold() => saveData.gold;

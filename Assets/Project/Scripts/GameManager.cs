@@ -67,11 +67,6 @@ public class GameManager : MonoBehaviour
     public GameState State => state;
     public event Action<GameState> OnStateChanged;
 
-    // ──────────────────────────────────────────────
-    // Selected Player
-    // ──────────────────────────────────────────────
-    public PlayerData selectedPlayer;  // Fallback khi không có PlayerSelectManager
-
 
     void Awake()
     {
@@ -89,15 +84,15 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        // Ưu tiên lấy player từ PlayerSelectManager; fallback về field selectedPlayer
-        PlayerData data = (PlayerSelectManager.Instance != null && PlayerSelectManager.Instance.SelectedPlayer != null)
-            ? PlayerSelectManager.Instance.SelectedPlayer
-            : selectedPlayer;
+        // Player xuat hien mac dinh khi sence chay
+        Player player = FindObjectOfType<Player>();
 
-        GameObject obj = Instantiate(data.playerPrefab);
-        Player player = obj.GetComponent<Player>();
+        PlayerData data = PlayerSelectManager.Instance?.GetPreferredOrDefaultPlayer();
 
-        player.Initialize(data);
+        if(data != null)
+            player.Initialize(data);
+
+        Debug.Log($"[GameManager] Spawned player: {data.playerName} with prefab {data.playerPrefab.name}");
 
         // Đăng ký lắng nghe EnemyManager
         if (EnemyManager.Instance != null)
@@ -235,7 +230,7 @@ public class GameManager : MonoBehaviour
         text.alignment = TMPro.TextAlignmentOptions.Center;
         text.color = Color.yellow;
         text.fontSize = 80;
-        
+
         RectTransform rect = text.GetComponent<RectTransform>();
         rect.localPosition = Vector3.zero;
         rect.sizeDelta = new Vector2(1000, 200);

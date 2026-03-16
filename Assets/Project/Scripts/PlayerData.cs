@@ -26,7 +26,6 @@ namespace Assets.Project.Scripts
         public int unlockCost;      // 0 = mở khóa mặc định
         public bool unlockedByDefault;
 
-        public RuntimeAnimatorController animator;
-        public GameObject playerPrefab;
+        public Player playerPrefab;
     }
 }

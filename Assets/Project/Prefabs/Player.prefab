@@ -1125,6 +1125,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player
   speed: 10
+  footR: {fileID: 7252949930024895491}
+  footL: {fileID: 3299065006637889917}
+  body: {fileID: 8748420936878226124}
   maxHealth: 100
   currentHealth: 0
   invulnerable: 0
@@ -1379,6 +1382,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: f723b6663a9961f4abddbeb6d4977e9f, type: 2}
   - {fileID: 11400000, guid: 7ac25aee58f5a4741ae5e48d23c9d3f0, type: 2}
   - {fileID: 11400000, guid: 8d3dd795a6f5e1f4f8bddde9ee215231, type: 2}
+  keyGun1: 41
+  keyGun2: 42
+  keyGun3: 43
+  keyGun4: 44
 --- !u!114 &2572846587259918834
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -97,6 +97,8 @@ public class GameManager : MonoBehaviour
         GameObject obj = Instantiate(data.playerPrefab);
         Player player = obj.GetComponent<Player>();
 
+        Debug.Log($"[GameManager] Spawned player: {data.playerName} with prefab {data.playerPrefab.name}");
+
         player.Initialize(data);
 
         // Đăng ký lắng nghe EnemyManager

@@ -62,8 +62,7 @@ public class Player : MonoBehaviour
         currentHealth = maxHealth;
         speed = data.speed;
 
-        if (data.animator != null)
-            animator.runtimeAnimatorController = data.animator;
+        animator = data.playerPrefab.GetComponent<Animator>();
 
         OnHealthChanged?.Invoke(currentHealth, maxHealth);
     }
@@ -72,7 +71,7 @@ public class Player : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
-        currentHealth = maxHealth;
+        //currentHealth = maxHealth;
     }
 
     void Start()

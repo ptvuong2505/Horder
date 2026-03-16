@@ -10,15 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e95d237b21b38fe418f32365a7eebf88, type: 3}
-  m_Name: PlayerData 2
+  m_Name: PlayerData_0
   m_EditorClassIdentifier: Assembly-CSharp::Assets.Project.Scripts.PlayerData
-  playerID: 2
-  playerName: Player 2
+  playerID: 0
+  playerName: Player 0
   description: 
-  portrait: {fileID: 1096699559687569402, guid: fda7e6232bf6f6f48ac18e94378d5b5b, type: 3}
-  maxHealth: 200
-  speed: 15
-  unlockCost: 500
+  portrait: {fileID: -3711057942607977549, guid: 15d34bf1bd1215140ac61b0672e7a92a, type: 3}
+  maxHealth: 100
+  speed: 10
+  unlockCost: 100
   unlockedByDefault: 0
-  animator: {fileID: 0}
-  playerPrefab: {fileID: 0}
+  playerPrefab: {fileID: 295677909915065765, guid: 1547e31741281364b84fc3f02e084c00, type: 3}

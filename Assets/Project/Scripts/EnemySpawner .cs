@@ -149,12 +149,14 @@ public class EnemySpawner : MonoBehaviour
             yield return new WaitUntil(() => boss == null);
             Debug.Log("[EnemySpawner] 👑 BOSS DEFEATED!");
 
-            // Chờ thêm minion chết hết
-            yield return new WaitUntil(() => GameObject.FindGameObjectsWithTag("Enemy").Length == 0);
+            // Đợi 1 tí sau khi boss chết
+            yield return new WaitForSecondsRealtime(1.5f);
 
-            // Báo wave clear cho boss wave
+            // Báo sang GameManager để hiện tin nhắn và qua màn luôn
             if (GameManager.Instance != null)
-                GameManager.Instance.HandleWaveClear();
+                GameManager.Instance.HandleAllWavesCompleted();
+
+            yield break; // Kết thúc wave, không spawn thêm hay đi tiếp wave nào nữa
         }
 
         // Chờ 3s trước wave tiếp (dùng Realtime để không bị ảnh hưởng bởi TimeScale)

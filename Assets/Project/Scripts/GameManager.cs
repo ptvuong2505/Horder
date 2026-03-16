@@ -183,7 +183,7 @@ public class GameManager : MonoBehaviour
     // ──────────────────────────────────────────────
     //  Khi hết tất cả wave → Level Clear
     // ──────────────────────────────────────────────
-    void HandleAllWavesCompleted()
+    public void HandleAllWavesCompleted()
     {
         state = GameState.LevelClear;
         OnStateChanged?.Invoke(state);
@@ -193,7 +193,8 @@ public class GameManager : MonoBehaviour
         if (PlayerSelectManager.Instance != null)
             PlayerSelectManager.Instance.AddGold(coins);
 
-        Invoke(nameof(LoadNextLevel), 3f);
+        ShowLevelClearMessage();
+
         StartCoroutine(LevelClearSequence());
     }
 
@@ -203,11 +204,43 @@ public class GameManager : MonoBehaviour
         if (AudioManager.Instance != null)
         {
             AudioManager.Instance.PlayLevelClear();
-            delay = AudioManager.Instance.GetLevelClearClipLength();
+            float audioLen = AudioManager.Instance.GetLevelClearClipLength();
+            if (audioLen > delay) delay = audioLen;
         }
 
-        yield return new WaitForSecondsRealtime(Mathf.Max(0.5f, delay));
+        yield return new WaitForSecondsRealtime(Mathf.Max(3f, delay));
         LoadNextLevel();
+    }
+
+    void ShowLevelClearMessage()
+    {
+        GameObject canvasObj = new GameObject("LevelClearCanvas");
+        Canvas canvas = canvasObj.AddComponent<Canvas>();
+        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        canvas.sortingOrder = 999;
+
+        // Thêm nền đen mờ
+        GameObject bgObj = new GameObject("Background");
+        bgObj.transform.SetParent(canvasObj.transform, false);
+        var bgImage = bgObj.AddComponent<UnityEngine.UI.Image>();
+        bgImage.color = new Color(0, 0, 0, 0.7f);
+        bgImage.rectTransform.anchorMin = Vector2.zero;
+        bgImage.rectTransform.anchorMax = Vector2.one;
+        bgImage.rectTransform.offsetMin = Vector2.zero;
+        bgImage.rectTransform.offsetMax = Vector2.zero;
+
+        // Thêm Text chúc mừng
+        GameObject textObj = new GameObject("CongratsText");
+        textObj.transform.SetParent(canvasObj.transform, false);
+        var text = textObj.AddComponent<TMPro.TextMeshProUGUI>();
+        text.text = "Chúc mừng thành công!";
+        text.alignment = TMPro.TextAlignmentOptions.Center;
+        text.color = Color.yellow;
+        text.fontSize = 80;
+        
+        RectTransform rect = text.GetComponent<RectTransform>();
+        rect.localPosition = Vector3.zero;
+        rect.sizeDelta = new Vector2(1000, 200);
     }
 
     void LoadNextLevel()

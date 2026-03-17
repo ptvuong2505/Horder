@@ -47,7 +47,14 @@ public class AutoGun : MonoBehaviour
     {
         if (gunData == null) return;
 
-        fireCooldown -= Time.deltaTime;
+        // Áp dụng Microphone multiplier
+        float micBoost = 1f;
+        if (MicInputManager.Instance != null)
+        {
+            micBoost = MicInputManager.Instance.GetVolumeBoost();
+        }
+
+        fireCooldown -= (Time.deltaTime * micBoost);
 
         currentTarget = FindNearestEnemy();
 

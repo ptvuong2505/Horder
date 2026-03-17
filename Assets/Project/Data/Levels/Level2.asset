@@ -48,9 +48,9 @@ MonoBehaviour:
       count: 10
     spawnInterval: 0.4
     delayBeforeWave: 3
-  scorePerKill: 15
   coinsPerKill: 5
-  bonusScorePerWave: 75
+  scrapPerKill: 1
+  scrapBonusPerWave: 3
   hasBoss: 1
-  bossPrefab: {fileID: 8709417838381407707, guid: 7e3e22105acf1bd45afe57ce1e306d98, type: 3}
+  bossPrefab: {fileID: 6495849987034951910, guid: a57155ea78613344bb40ce815b45f114, type: 3}
   bossSpawnAfterWave: -1

@@ -25,13 +25,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3716360226178875690}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0.0044556763, w: 0.9999901}
+  m_LocalPosition: {x: 0.1259, y: -0.0559, z: 0}
+  m_LocalScale: {x: 1.8956879, y: 1.7925824, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5968263114157038322}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -0.511}
 --- !u!212 &6571214263091414241
 SpriteRenderer:
   serializedVersion: 2
@@ -81,7 +81,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 1159111632712944081, guid: 71d38af52461c5549a6ca585178973c3, type: 3}
+  m_Sprite: {fileID: -5973463738169371314, guid: 74e35aa49e9432c46bf3304246c43ad2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -160,7 +160,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.028808594, y: -0.016143799}
+  m_Offset: {x: 0.12762451, y: -0.05319214}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -170,7 +170,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 2.1241455, y: 0.418396}
+  m_Size: {x: 0.5131836, y: 0.19586182}
   m_EdgeRadius: 0
 --- !u!50 &6270256945241535367
 Rigidbody2D:
@@ -213,3 +213,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Bullet
   speed: 12
   lifeTime: 2
+  damage: 10

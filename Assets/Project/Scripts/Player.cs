@@ -21,6 +21,7 @@ public class Player : MonoBehaviour
     Animator animator;
     Rigidbody2D rb;
 
+    [SerializeField] private Transform spriteRoot; // chính là object "Sprite"
     public SpriteRenderer footR;
     public SpriteRenderer footL;
     public SpriteRenderer body;
@@ -110,6 +111,12 @@ public class Player : MonoBehaviour
         if (!dead)
         {
             rb.linearVelocity = moveInput * speed;
+            if (moveInput.x != 0)
+            {
+                Vector3 scale = spriteRoot.localScale;
+                scale.x = Mathf.Sign(moveInput.x) * Mathf.Abs(scale.x);
+                spriteRoot.localScale = scale;
+            }
         }
         else
         {

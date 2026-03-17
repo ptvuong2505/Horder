@@ -1125,6 +1125,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player
   speed: 10
+  spriteRoot: {fileID: 8020771399593389838}
   footR: {fileID: 7252949930024895491}
   footL: {fileID: 3299065006637889917}
   body: {fileID: 8748420936878226124}

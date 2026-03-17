@@ -204,19 +204,19 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1727619824111744094, guid: 5099ec8e049d8204da294d096964c762, type: 3}
       propertyPath: m_LocalScale.x
-      value: 1.6505691
+      value: 1.6837418
       objectReference: {fileID: 0}
     - target: {fileID: 1727619824111744094, guid: 5099ec8e049d8204da294d096964c762, type: 3}
       propertyPath: m_LocalScale.y
-      value: 1.2128973
+      value: 1.2152683
       objectReference: {fileID: 0}
     - target: {fileID: 1727619824111744094, guid: 5099ec8e049d8204da294d096964c762, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 5.1959
+      value: 4.8571
       objectReference: {fileID: 0}
     - target: {fileID: 1727619824111744094, guid: 5099ec8e049d8204da294d096964c762, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -5.76
+      value: -5.7842
       objectReference: {fileID: 0}
     - target: {fileID: 4398118543932218708, guid: 5099ec8e049d8204da294d096964c762, type: 3}
       propertyPath: m_Size.x
@@ -721,7 +721,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc08bf333dd01bc4d9602ae2dc673429, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraFollow
-  target: {fileID: 0}
+  target: {fileID: 1563114106}
   smoothSpeed: 5
   offset: {x: 0, y: 0, z: 0}
 --- !u!114 &1166646326
@@ -920,6 +920,60 @@ MonoBehaviour:
   fillRect: {fileID: 0}
   fullWidth: 0
   hideWhenFull: 0
+--- !u!1 &1555280927
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1555280929}
+  - component: {fileID: 1555280928}
+  m_Layer: 0
+  m_Name: WorldBounds
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1555280928
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1555280927}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b59785651b119a84dbd36b8fa119b2fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WorldBounds2D
+  boundSize: {x: 34.4, y: 25}
+  boundCenter: {x: 0, y: 0}
+  wallThickness: 1
+  wallLayer: 0
+  buildOnStart: 1
+--- !u!4 &1555280929
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1555280927}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.06471, y: 4.17996, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &1563114106 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3396807405526732465, guid: 2a369d4b6216e664fb2d9577a3cc7bc6, type: 3}
+  m_PrefabInstance: {fileID: 1185267469}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -931,3 +985,4 @@ SceneRoots:
   - {fileID: 434320987}
   - {fileID: 481264432}
   - {fileID: 1185267469}
+  - {fileID: 1555280929}

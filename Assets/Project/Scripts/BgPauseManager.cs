@@ -35,16 +35,8 @@ public class BgPauseManager : MonoBehaviour
 
     public void OnRestart()
     {
-        PauseManager pm = FindFirstObjectByType<PauseManager>();
-        if (pm != null)
-        {
-            pm.RestartGame();
-        }
-        else
-        {
-            // Fallback nếu không tìm thấy PauseManager
-            Time.timeScale = 1f;
-            UnityEngine.SceneManagement.SceneManager.LoadScene("Level1");
-        }
+        // Require return to Menu on RestartButton click
+        Time.timeScale = 1f;
+        UnityEngine.SceneManagement.SceneManager.LoadScene("Menu");
     }
 }

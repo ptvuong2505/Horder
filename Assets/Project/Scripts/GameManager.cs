@@ -332,6 +332,7 @@ public class GameManager : MonoBehaviour
         Debug.Log($"[GameManager] Game Over! Coins: {coins}, Scrap: {scrap}");
         PlayerPrefs.SetInt("FinalCoins", coins);
         PlayerPrefs.SetInt("FinalScrap", scrap);
+        PlayerPrefs.SetString("LastLevel", SceneManager.GetActiveScene().name);
         PlayerPrefs.Save();
 
         StartCoroutine(GameOverSequence());

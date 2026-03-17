@@ -194,6 +194,63 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 51106371}
   m_CullTransparentMesh: 1
+--- !u!1001 &200593290
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 398018368226061889, guid: a30eb84bd4674a648ab861f638bf851e, type: 3}
+      propertyPath: m_Name
+      value: MicInputManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 2650486314647658058, guid: a30eb84bd4674a648ab861f638bf851e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2650486314647658058, guid: a30eb84bd4674a648ab861f638bf851e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2650486314647658058, guid: a30eb84bd4674a648ab861f638bf851e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2650486314647658058, guid: a30eb84bd4674a648ab861f638bf851e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2650486314647658058, guid: a30eb84bd4674a648ab861f638bf851e, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2650486314647658058, guid: a30eb84bd4674a648ab861f638bf851e, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2650486314647658058, guid: a30eb84bd4674a648ab861f638bf851e, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2650486314647658058, guid: a30eb84bd4674a648ab861f638bf851e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2650486314647658058, guid: a30eb84bd4674a648ab861f638bf851e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2650486314647658058, guid: a30eb84bd4674a648ab861f638bf851e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: a30eb84bd4674a648ab861f638bf851e, type: 3}
 --- !u!1 &226341957
 GameObject:
   m_ObjectHideFlags: 0
@@ -240,7 +297,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ParallaxLayer
   parallaxSpeedX: 0.1
-  parallaxSpeedY: 0
+  parallaxSpeedY: 0.1
   infiniteScrollX: 1
   infiniteScrollY: 0
 --- !u!212 &226341960
@@ -481,7 +538,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a9114cd646432a4d903e39c4d5d1ea1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ParallaxBackground
-  targetCamera: {fileID: 0}
+  targetCamera: {fileID: 1166646323}
   globalSpeedMultiplier: 1
 --- !u!4 &638686294
 Transform:
@@ -1051,7 +1108,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ParallaxLayer
   parallaxSpeedX: 0.15
-  parallaxSpeedY: 0
+  parallaxSpeedY: 0.15
   infiniteScrollX: 1
   infiniteScrollY: 0
 --- !u!212 &1291562532
@@ -1159,7 +1216,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ParallaxLayer
   parallaxSpeedX: 0.05
-  parallaxSpeedY: 0
+  parallaxSpeedY: 0.05
   infiniteScrollX: 1
   infiniteScrollY: 0
 --- !u!212 &1308665425
@@ -1267,7 +1324,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ParallaxLayer
   parallaxSpeedX: 0.3
-  parallaxSpeedY: 0
+  parallaxSpeedY: 0.3
   infiniteScrollX: 1
   infiniteScrollY: 0
 --- !u!212 &1343382924
@@ -1375,7 +1432,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ParallaxLayer
   parallaxSpeedX: 0.4
-  parallaxSpeedY: 0
+  parallaxSpeedY: 0.4
   infiniteScrollX: 1
   infiniteScrollY: 0
 --- !u!212 &1419951298
@@ -1632,7 +1689,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ParallaxLayer
   parallaxSpeedX: 0.2
-  parallaxSpeedY: 0
+  parallaxSpeedY: 0.2
   infiniteScrollX: 1
   infiniteScrollY: 0
 --- !u!212 &1726096800
@@ -1706,3 +1763,4 @@ SceneRoots:
   - {fileID: 1185267469}
   - {fileID: 1555280929}
   - {fileID: 638686294}
+  - {fileID: 200593290}

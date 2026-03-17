@@ -1,4 +1,4 @@
-﻿using TMPro;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -28,7 +28,9 @@ public class GameOverManager : MonoBehaviour
         GameManager.ClearSavedCoins();
         GunShop.ClearSavedUnlocks();
         WeaponManager.ClearSavedEquippedGun();
-        SceneManager.LoadScene("Level1");
+        
+        string lastLevel = PlayerPrefs.GetString("LastLevel", "Level1");
+        SceneManager.LoadScene(lastLevel);
     }
 
     // Gắn vào Button "Back to Menu"

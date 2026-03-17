@@ -108,15 +108,15 @@ public class PlayerSelectManager : MonoBehaviour
         if (playerRegistry == null || playerRegistry.allPlayers == null || playerRegistry.allPlayers.Count == 0)
             return null;
 
-        if (saveData != null && saveData.unlockedPlayers != null)
-        {
-            foreach (var id in saveData.unlockedPlayers)
-            {
-                var unlocked = playerRegistry.GetByID(id);
-                if (unlocked != null && unlocked.playerPrefab != null)
-                    return unlocked;
-            }
-        }
+        //if (saveData != null && saveData.unlockedPlayers != null)
+        //{
+        //    foreach (var id in saveData.unlockedPlayers)
+        //    {
+        //        var unlocked = playerRegistry.GetByID(id);
+        //        if (unlocked != null && unlocked.playerPrefab != null)
+        //            return unlocked;
+        //    }
+        //}
 
         foreach (var p in playerRegistry.allPlayers)
         {
@@ -124,11 +124,11 @@ public class PlayerSelectManager : MonoBehaviour
                 return p;
         }
 
-        foreach (var p in playerRegistry.allPlayers)
-        {
-            if (p != null && p.playerPrefab != null)
-                return p;
-        }
+        //foreach (var p in playerRegistry.allPlayers)
+        //{
+        //    if (p != null && p.playerPrefab != null)
+        //        return p;
+        //}
 
         return null;
     }

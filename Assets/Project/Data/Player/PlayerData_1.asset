@@ -16,8 +16,8 @@ MonoBehaviour:
   playerName: Player 1
   description: 
   portrait: {fileID: -8414071892429885057, guid: f80e7aaf34f4fdd4494fddec8313174c, type: 3}
-  maxHealth: 150
+  maxHealth: 250
   speed: 15
-  unlockCost: 150
+  unlockCost: 750
   unlockedByDefault: 0
   playerPrefab: {fileID: 309440290348369974, guid: d5cc9f001872a274c98cf5b2bac444fc, type: 3}

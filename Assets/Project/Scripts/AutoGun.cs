@@ -27,7 +27,7 @@ public class AutoGun : MonoBehaviour
     public GameObject muzzleFlash;      // Hiệu ứng lửa nòng (SpriteRenderer / Particle)
     public SpriteRenderer gunRenderer;  // Renderer của thân súng
 
-    private float fireCooldown = 0f;
+    public float fireCooldown = 0f;
     private Transform currentTarget;
     private static bool micLookupInitialized;
     private static Type micManagerType;

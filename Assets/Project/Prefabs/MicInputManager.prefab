@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2650486314647658058}
-  - component: {fileID: 1690146505595563011}
+  - component: {fileID: 1790547147886357823}
   m_Layer: 0
   m_Name: MicInputManager
   m_TagString: Untagged
@@ -32,7 +32,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1690146505595563011
+--- !u!114 &1790547147886357823
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MicInputManager
   micDeviceName: 
-  sampleWindow: 128
-  thresholdVolume: 0.01
-  maxBoostMultiplier: 5
-  sensitivityMultiplier: 100
+  sampleWindow: 2048
+  thresholdVolume: 0.002
+  maxBoostMultiplier: 10
+  sensitivityMultiplier: 400

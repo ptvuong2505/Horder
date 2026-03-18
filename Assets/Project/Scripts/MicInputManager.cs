@@ -13,18 +13,19 @@ public class MicInputManager : MonoBehaviour
     [Tooltip("Tên thiết bị Microphone. Để trống sẽ dùng thiết bị mặc định.")]
     public string micDeviceName = null;
     [Tooltip("Số lượng mẫu âm thanh để phân tích mỗi frame")]
-    public int sampleWindow = 128;
+    public int sampleWindow = 2048;
 
     [Header("Boost Settings")]
     [Tooltip("Ngưỡng âm lượng tối thiểu để bắt đầu nhận diện (lọc tiếng ồn nhẹ)")]
-    public float thresholdVolume = 0.01f;
+    public float thresholdVolume = 0.002f;
     [Tooltip("Hệ số nhân tối đa cho tốc độ bắn khi hét to nhất")]
     public float maxBoostMultiplier = 5f;
     [Tooltip("Hệ số khuếch đại độ nhạy mic nội bộ")]
-    public float sensitivityMultiplier = 100f;
+    public float sensitivityMultiplier = 400f;
 
     private AudioClip microphoneClip;
     private bool isInitialized = false;
+    private float smoothedLoudness = 0f;
 
     void Awake()
     {
@@ -97,7 +98,10 @@ public class MicInputManager : MonoBehaviour
         }
 
         float rms = Mathf.Sqrt(totalSquare / sampleWindow);
-        return rms;
+        
+        // Cập nhật giá trị làm mượt (Smoothing) để biểu đồ sóng âm không bị giật lác
+        smoothedLoudness = Mathf.Lerp(smoothedLoudness, rms, Time.deltaTime * 15f);
+        return smoothedLoudness;
     }
 
     /// <summary>

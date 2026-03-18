@@ -1194,6 +1194,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: MicInputManager
       objectReference: {fileID: 0}
+    - target: {fileID: 1690146505595563011, guid: a30eb84bd4674a648ab861f638bf851e, type: 3}
+      propertyPath: maxBoostMultiplier
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1690146505595563011, guid: a30eb84bd4674a648ab861f638bf851e, type: 3}
+      propertyPath: sensitivityMultiplier
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 2650486314647658058, guid: a30eb84bd4674a648ab861f638bf851e, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1513,6 +1521,9 @@ MonoBehaviour:
   keyGun2: 42
   keyGun3: 43
   keyGun4: 44
+  useFourCornerFormation: 1
+  cornerDistanceX: 1.8
+  cornerDistanceY: 1.2
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

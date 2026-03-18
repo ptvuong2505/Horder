@@ -25,7 +25,13 @@ public class AudioManager : MonoBehaviour
     public AudioSource bgmSource;
 
     [Header("SFX Clips — Gán trong Inspector")]
-    public AudioClip shootSFX;
+    [Header("Weapon SFX")]
+    public AudioClip pistolSFX;
+    public AudioClip rifleSFX;
+    public AudioClip shotgunSFX;
+    public AudioClip sniperSFX;
+
+    [Header("Other SFX")]
     public AudioClip enemyHitSFX;
     public AudioClip enemyDieSFX;
     public AudioClip playerHitSFX;
@@ -40,6 +46,9 @@ public class AudioManager : MonoBehaviour
     [Header("BGM Clips")]
     public AudioClip menuBGM;
     public AudioClip gameplayBGM;
+
+    [Header("Introduction")]
+    public AudioClip introductionAudio;  // Nếu dùng audio thôi (mp3/wav từ intro.mp4)
 
     [Header("Settings")]
     [Range(0f, 1f)] public float sfxVolume = 1f;
@@ -130,8 +139,13 @@ public class AudioManager : MonoBehaviour
 
     public void PlayShoot(AudioClip overrideClip = null)
     {
-        PlaySFX(overrideClip != null ? overrideClip : shootSFX);
+        PlaySFX(overrideClip != null ? overrideClip : pistolSFX);
     }
+
+    public void PlayPistolShoot() => PlaySFX(pistolSFX);
+    public void PlayRifleShoot() => PlaySFX(rifleSFX);
+    public void PlayShotgunShoot() => PlaySFX(shotgunSFX);
+    public void PlaySniperShoot() => PlaySFX(sniperSFX);
 
     public void PlayEnemyHit() => PlaySFX(enemyHitSFX);
     public void PlayEnemyDie() => PlaySFX(enemyDieSFX);
@@ -173,6 +187,17 @@ public class AudioManager : MonoBehaviour
         if (bgmSource != null)
             bgmSource.Stop();
     }
+
+    public void PlayIntroduction()
+    {
+        if (introductionAudio == null || announceSource == null) return;
+        announceSource.clip = introductionAudio;
+        announceSource.loop = false;
+        announceSource.volume = 1f;
+        announceSource.Play();
+    }
+
+    public float GetIntroductionClipLength() => introductionAudio != null ? introductionAudio.length : 3f;
 
     public void SetSFXVolume(float vol)
     {

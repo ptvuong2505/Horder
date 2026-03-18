@@ -4361,7 +4361,10 @@ MonoBehaviour:
   sfxSource: {fileID: 0}
   announceSource: {fileID: 0}
   bgmSource: {fileID: 0}
-  shootSFX: {fileID: 8300000, guid: 809e8969d290a344692abc992781cc2d, type: 3}
+  pistolSFX: {fileID: 8300000, guid: 809e8969d290a344692abc992781cc2d, type: 3}
+  rifleSFX: {fileID: 8300000, guid: 518f2c60e382eda4da747dcaec07106b, type: 3}
+  shotgunSFX: {fileID: 8300000, guid: 5c735cb62d641a74bb886dd7d2ad0ebe, type: 3}
+  sniperSFX: {fileID: 8300000, guid: 2097303211c29bb4ab6f3f95731f449d, type: 3}
   enemyHitSFX: {fileID: 8300000, guid: 75a0cace23c361444b5e931916dd118c, type: 3}
   enemyDieSFX: {fileID: 0}
   playerHitSFX: {fileID: 0}
@@ -4374,6 +4377,7 @@ MonoBehaviour:
   gameOverSFX: {fileID: 8300000, guid: fbb55f18a6b79394583b5f01960ee7c3, type: 3}
   menuBGM: {fileID: 0}
   gameplayBGM: {fileID: 0}
+  introductionAudio: {fileID: 0}
   sfxVolume: 1
   bgmVolume: 0.5
   waveStartVolumeMultiplier: 1.25

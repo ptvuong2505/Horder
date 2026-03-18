@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: GunData_Rifle
   m_EditorClassIdentifier: Assembly-CSharp::GunData
   gunName: Rifle
-  gunSprite: {fileID: -4954985349445716148, guid: 7b6ee8f1d0923a44597f0f08a2fd82c6, type: 3}
+  gunSprite: {fileID: -7613987445837597808, guid: 28feb4d013571ae4e98de89397461d72, type: 3}
   bulletPrefab: {fileID: 8073157801147965921, guid: 91aeecadedd971542b5fb755c09333d0, type: 3}
   damage: 30
   bulletSpeed: 18

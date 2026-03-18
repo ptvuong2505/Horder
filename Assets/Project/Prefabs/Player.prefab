@@ -46,9 +46,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1559b98f90b6e944b9587440ed63dd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AutoGun
-  gunData: {fileID: 0}
+  gunData: {fileID: 11400000, guid: f723b6663a9961f4abddbeb6d4977e9f, type: 2}
   muzzlePosition: {fileID: 9140997985593618148}
   muzzleFlash: {fileID: 0}
+  gunRenderer: {fileID: 0}
   damageMultiplier: 1
   fireRateMultiplier: 1
 --- !u!212 &6388364473138058513
@@ -400,9 +401,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1559b98f90b6e944b9587440ed63dd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AutoGun
-  gunData: {fileID: 0}
+  gunData: {fileID: 11400000, guid: 0f7e8d59e3886df4ea8037affe37bbe9, type: 2}
   muzzlePosition: {fileID: 1569846035393073784}
   muzzleFlash: {fileID: 0}
+  gunRenderer: {fileID: 0}
   damageMultiplier: 1
   fireRateMultiplier: 1
 --- !u!212 &2955456281237165918
@@ -632,9 +634,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1559b98f90b6e944b9587440ed63dd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AutoGun
-  gunData: {fileID: 0}
+  gunData: {fileID: 11400000, guid: 8d3dd795a6f5e1f4f8bddde9ee215231, type: 2}
   muzzlePosition: {fileID: 4520248003759097237}
   muzzleFlash: {fileID: 0}
+  gunRenderer: {fileID: 0}
   damageMultiplier: 1
   fireRateMultiplier: 1
 --- !u!212 &2667100449543985777
@@ -742,9 +745,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1559b98f90b6e944b9587440ed63dd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AutoGun
-  gunData: {fileID: 0}
+  gunData: {fileID: 11400000, guid: 7ac25aee58f5a4741ae5e48d23c9d3f0, type: 2}
   muzzlePosition: {fileID: 7412252188085266026}
   muzzleFlash: {fileID: 0}
+  gunRenderer: {fileID: 0}
   damageMultiplier: 1
   fireRateMultiplier: 1
 --- !u!212 &7570451601670783496
@@ -1387,6 +1391,9 @@ MonoBehaviour:
   keyGun2: 42
   keyGun3: 43
   keyGun4: 44
+  useFourCornerFormation: 1
+  cornerDistanceX: 1.8
+  cornerDistanceY: 1.2
 --- !u!114 &2572846587259918834
 MonoBehaviour:
   m_ObjectHideFlags: 0

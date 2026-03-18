@@ -24,6 +24,14 @@ public class WeaponManager : MonoBehaviour
     public Key keyGun3 = Key.Digit3;
     public Key keyGun4 = Key.Digit4;
 
+    [Header("4-Gun Formation")]
+    [Tooltip("Bật để hiển thị 4 súng ở 4 góc quanh nhân vật.")]
+    public bool useFourCornerFormation = true;
+    [Tooltip("Khoảng cách ngang từ tâm nhân vật đến súng.")]
+    public float cornerDistanceX = 1.8f;
+    [Tooltip("Khoảng cách dọc từ tâm nhân vật đến súng.")]
+    public float cornerDistanceY = 1.2f;
+
     // Event thông báo (giữ để tương thích nếu UI dùng)
     public event Action<int, GunData> OnWeaponChanged;
 
@@ -33,6 +41,20 @@ public class WeaponManager : MonoBehaviour
     // Awake: setup GunData, tắt hết, TỰ TẠO GunShop nếu chưa có
     void Awake()
     {
+        if (guns.Count == 0)
+        {
+            // Fallback: tự quét AutoGun con của Player nếu quên kéo thả ở Inspector.
+            AutoGun[] foundGuns = GetComponentsInChildren<AutoGun>(true);
+            for (int i = 0; i < foundGuns.Length; i++)
+            {
+                if (foundGuns[i] != null)
+                    guns.Add(foundGuns[i]);
+            }
+
+            if (guns.Count > 0)
+                Debug.Log($"[WeaponManager] Tự tìm thấy {guns.Count} AutoGun từ hierarchy.");
+        }
+
         if (guns.Count == 0 || gunDataList.Count == 0)
         {
             Debug.LogWarning("[WeaponManager] Chưa gán guns hoặc gunDataList trong Inspector!");
@@ -63,6 +85,7 @@ public class WeaponManager : MonoBehaviour
     {
         // Chỉ bật đúng 1 súng đầu tiên đã unlock
         EquipFirstUnlocked();
+        ApplyGunFormation();
 
         // Wire GunShopUI (đã có trong scene) vào GameManager
         var shopUI = FindFirstObjectByType<GunShopUI>();
@@ -80,6 +103,9 @@ public class WeaponManager : MonoBehaviour
         if (Keyboard.current[keyGun2].wasPressedThisFrame) TryEquipUnlocked(1);
         if (Keyboard.current[keyGun3].wasPressedThisFrame) TryEquipUnlocked(2);
         if (Keyboard.current[keyGun4].wasPressedThisFrame) TryEquipUnlocked(3);
+
+        if (useFourCornerFormation)
+            ApplyGunFormation();
     }
 
     // ──────────────────────────────────────────────
@@ -123,11 +149,17 @@ public class WeaponManager : MonoBehaviour
             }
         }
 
-        // Không có súng nào unlock thì tắt hết
-        for (int i = 0; i < guns.Count; i++)
+        // Không có súng nào unlock: fallback trang bị slot 0 để tránh vào game không thấy súng.
+        if (guns.Count > 0 && guns[0] != null)
         {
-            if (guns[i] != null) guns[i].gameObject.SetActive(false);
+            Debug.LogWarning("[WeaponManager] Không có súng unlock, fallback trang bị slot 0.");
+            EquipOnly(0);
+            return;
         }
+
+        for (int i = 0; i < guns.Count; i++)
+            if (guns[i] != null) guns[i].gameObject.SetActive(false);
+
         currentIndex = -1;
         PlayerPrefs.DeleteKey(EquippedGunKey);
         PlayerPrefs.Save();
@@ -154,9 +186,15 @@ public class WeaponManager : MonoBehaviour
         for (int i = 0; i < guns.Count; i++)
         {
             if (guns[i] == null) continue;
-            bool active = (i == index);
+
+            bool active = useFourCornerFormation ? IsSlotActiveInFormation(i) : (i == index);
             guns[i].gameObject.SetActive(active);
+
+            if (active && i < gunDataList.Count && gunDataList[i] != null)
+                guns[i].Setup(gunDataList[i]);
         }
+
+        ApplyGunFormation();
 
         currentIndex = index;
         PlayerPrefs.SetInt(EquippedGunKey, index);
@@ -164,6 +202,53 @@ public class WeaponManager : MonoBehaviour
         GunData data = (index >= 0 && index < gunDataList.Count) ? gunDataList[index] : null;
         OnWeaponChanged?.Invoke(index, data);
         Debug.Log($"[WeaponManager] Trang bị súng [{index + 1}]: {data?.gunName}");
+    }
+
+    bool IsSlotActiveInFormation(int index)
+    {
+        if (index < 0 || index >= guns.Count) return false;
+
+        if (GunShop.Instance != null)
+        {
+            if (GunShop.Instance.IsUnlocked(index))
+                return true;
+
+            bool anyUnlocked = false;
+            for (int i = 0; i < guns.Count; i++)
+            {
+                if (GunShop.Instance.IsUnlocked(i))
+                {
+                    anyUnlocked = true;
+                    break;
+                }
+            }
+
+            // Nếu chưa unlock khẩu nào thì bật tạm slot 0 để người chơi luôn có súng.
+            return !anyUnlocked && index == 0;
+        }
+
+        // Fallback an toàn khi GunShop chưa sẵn sàng.
+        return index == 0;
+    }
+
+    void ApplyGunFormation()
+    {
+        if (!useFourCornerFormation) return;
+
+        Vector3[] corners = new Vector3[]
+        {
+            new Vector3(-cornerDistanceX,  cornerDistanceY, 0f),
+            new Vector3( cornerDistanceX,  cornerDistanceY, 0f),
+            new Vector3(-cornerDistanceX, -cornerDistanceY, 0f),
+            new Vector3( cornerDistanceX, -cornerDistanceY, 0f)
+        };
+
+        int count = Mathf.Min(guns.Count, corners.Length);
+        for (int i = 0; i < count; i++)
+        {
+            if (guns[i] == null) continue;
+            guns[i].transform.localPosition = corners[i];
+        }
     }
 
     // ──────────────────────────────────────────────

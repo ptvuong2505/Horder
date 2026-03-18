@@ -1,4 +1,6 @@
 using System.Collections;
+using System;
+using System.Reflection;
 using UnityEngine;
 
 /// <summary>
@@ -23,9 +25,14 @@ public class AutoGun : MonoBehaviour
     [Header("References")]
     public Transform muzzlePosition;    // Đầu nòng súng (điểm spawn đạn)
     public GameObject muzzleFlash;      // Hiệu ứng lửa nòng (SpriteRenderer / Particle)
+    public SpriteRenderer gunRenderer;  // Renderer của thân súng
 
     private float fireCooldown = 0f;
     private Transform currentTarget;
+    private static bool micLookupInitialized;
+    private static Type micManagerType;
+    private static FieldInfo micInstanceField;
+    private static MethodInfo micBoostMethod;
 
     // Multipliers cho upgrade/pickup (mặc định = 1)
     [HideInInspector] public float damageMultiplier = 1f;
@@ -34,6 +41,14 @@ public class AutoGun : MonoBehaviour
     {
         gunData = data;
         fireCooldown = 0f;
+
+        if (gunData != null)
+        {
+            transform.localPosition = gunData.positionOffset;
+            transform.localRotation = Quaternion.identity;
+            ApplyVisualFromData();
+        }
+
         Debug.Log($"[AutoGun] {gameObject.name} đã nhận GunData: {data?.gunName}");
     }
 
@@ -43,16 +58,54 @@ public class AutoGun : MonoBehaviour
             muzzleFlash.SetActive(false);
     }
 
+    void OnEnable()
+    {
+        // Tránh trường hợp renderer bị tắt từ prefab/animation làm súng không hiển thị.
+        SpriteRenderer[] renderers = GetComponentsInChildren<SpriteRenderer>(true);
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            if (renderers[i] != null)
+                renderers[i].enabled = true;
+        }
+
+        if (gunData != null)
+        {
+            transform.localPosition = gunData.positionOffset;
+            ApplyVisualFromData();
+        }
+    }
+
+    void ApplyVisualFromData()
+    {
+        if (gunRenderer == null)
+            gunRenderer = GetComponent<SpriteRenderer>();
+
+        if (gunRenderer == null || gunData == null)
+            return;
+
+        if (gunData.gunSprite != null)
+            gunRenderer.sprite = gunData.gunSprite;
+
+        // Đồng bộ sorting với body player để súng không bị chìm dưới layer khác.
+        Player player = GetComponentInParent<Player>();
+        if (player != null && player.body != null)
+        {
+            gunRenderer.sortingLayerID = player.body.sortingLayerID;
+            gunRenderer.sortingOrder = player.body.sortingOrder + 1;
+        }
+
+        gunRenderer.enabled = true;
+        Color c = gunRenderer.color;
+        c.a = 1f;
+        gunRenderer.color = c;
+    }
+
     void Update()
     {
         if (gunData == null) return;
 
         // Áp dụng Microphone multiplier
-        float micBoost = 1f;
-        if (MicInputManager.Instance != null)
-        {
-            micBoost = MicInputManager.Instance.GetVolumeBoost();
-        }
+        float micBoost = GetMicBoostSafe();
 
         fireCooldown -= (Time.deltaTime * micBoost);
 
@@ -68,6 +121,30 @@ public class AutoGun : MonoBehaviour
                 fireCooldown = gunData.fireRate * fireRateMultiplier;
             }
         }
+    }
+
+    float GetMicBoostSafe()
+    {
+        if (!micLookupInitialized)
+        {
+            micLookupInitialized = true;
+            micManagerType = Type.GetType("MicInputManager") ?? Type.GetType("MicInputManager, Assembly-CSharp");
+            if (micManagerType != null)
+            {
+                micInstanceField = micManagerType.GetField("Instance", BindingFlags.Public | BindingFlags.Static);
+                micBoostMethod = micManagerType.GetMethod("GetVolumeBoost", BindingFlags.Public | BindingFlags.Instance);
+            }
+        }
+
+        if (micManagerType == null || micInstanceField == null || micBoostMethod == null)
+            return 1f;
+
+        object instance = micInstanceField.GetValue(null);
+        if (instance == null)
+            return 1f;
+
+        object result = micBoostMethod.Invoke(instance, null);
+        return result is float value ? value : 1f;
     }
 
     Transform FindNearestEnemy()

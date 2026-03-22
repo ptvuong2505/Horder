@@ -31,23 +31,37 @@ public class Bullet : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Enemy"))
+        // Trước đây đạn chỉ xử lý khi tag = "Enemy".
+        // Boss2 đang để tag Untagged nên sẽ không bao giờ nhận damage.
+        // Giải pháp: ưu tiên check component để không phụ thuộc tag.
+
+        bool didHitSomething = false;
+
+        // Enemy thường
+        Enemy enemy = collision.GetComponent<Enemy>();
+        if (enemy != null)
         {
-            // Gây damage cho Enemy nếu có component Enemy
-            Enemy enemy = collision.GetComponent<Enemy>();
-            if (enemy != null)
-            {
-                enemy.Hit(damage);
-            }
-
-            // Gây damage cho BossEnemy nếu có component BossEnemy
-            BossEnemy boss = collision.GetComponent<BossEnemy>();
-            if (boss != null)
-            {
-                boss.Hit(damage);
-            }
-
-            Destroy(gameObject);
+            enemy.Hit(damage);
+            didHitSomething = true;
         }
+
+        // Boss level 1
+        BossEnemy boss1 = collision.GetComponent<BossEnemy>();
+        if (boss1 != null)
+        {
+            boss1.Hit(damage);
+            didHitSomething = true;
+        }
+
+        // Boss level 2
+        Boss2Enemy boss2 = collision.GetComponent<Boss2Enemy>();
+        if (boss2 != null)
+        {
+            boss2.Hit(damage);
+            didHitSomething = true;
+        }
+
+        if (didHitSomething)
+            Destroy(gameObject);
     }
 }

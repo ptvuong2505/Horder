@@ -17,31 +17,30 @@ public class WaveUI : MonoBehaviour
     private float fadeTimer = 0f;
     private bool isFading = false;
     private bool isFadeIn = false;
+    private GameManager boundGameManager;
 
     void Start()
     {
         if (announceGroup != null)
             announceGroup.alpha = 0f;
 
-        // Đăng ký lắng nghe GameManager
-        if (GameManager.Instance != null)
-        {
-            GameManager.Instance.OnWaveChanged += UpdateWaveText;
-            GameManager.Instance.OnStateChanged += HandleStateChanged;
-        }
+        RebindGameManager();
     }
 
     void OnDestroy()
     {
-        if (GameManager.Instance != null)
+        if (boundGameManager != null)
         {
-            GameManager.Instance.OnWaveChanged -= UpdateWaveText;
-            GameManager.Instance.OnStateChanged -= HandleStateChanged;
+            boundGameManager.OnWaveChanged -= UpdateWaveText;
+            boundGameManager.OnStateChanged -= HandleStateChanged;
         }
     }
 
     void Update()
     {
+        if (boundGameManager != GameManager.Instance)
+            RebindGameManager();
+
         if (!isFading) return;
 
         fadeTimer += Time.deltaTime;
@@ -68,6 +67,23 @@ public class WaveUI : MonoBehaviour
         }
     }
 
+    void RebindGameManager()
+    {
+        if (boundGameManager != null)
+        {
+            boundGameManager.OnWaveChanged -= UpdateWaveText;
+            boundGameManager.OnStateChanged -= HandleStateChanged;
+        }
+
+        boundGameManager = GameManager.Instance;
+        if (boundGameManager == null) return;
+
+        boundGameManager.OnWaveChanged += UpdateWaveText;
+        boundGameManager.OnStateChanged += HandleStateChanged;
+
+        UpdateWaveText(boundGameManager.CurrentWave, boundGameManager.TotalWaves);
+    }
+
     // ──────────────────────────────────────────────
     void UpdateWaveText(int current, int total)
     {
@@ -80,8 +96,10 @@ public class WaveUI : MonoBehaviour
         switch (newState)
         {
             case GameManager.GameState.Playing:
-                int wave = GameManager.Instance.CurrentWave;
-                ShowAnnounce($"WAVE {wave}");
+                if (GameManager.Instance != null)
+                    UpdateWaveText(GameManager.Instance.CurrentWave, GameManager.Instance.TotalWaves);
+
+                HideAnnounceImmediate();
                 if (AudioManager.Instance != null)
                     AudioManager.Instance.PlayWaveStart();
                 break;
@@ -94,6 +112,19 @@ public class WaveUI : MonoBehaviour
                 ShowAnnounce("LEVEL CLEAR!");
                 break;
         }
+    }
+
+    void HideAnnounceImmediate()
+    {
+        isFading = false;
+        isFadeIn = false;
+        fadeTimer = 0f;
+
+        if (announceGroup != null)
+            announceGroup.alpha = 0f;
+
+        if (waveAnnounce != null)
+            waveAnnounce.text = string.Empty;
     }
 
     void ShowAnnounce(string message)

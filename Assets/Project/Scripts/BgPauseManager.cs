@@ -35,8 +35,15 @@ public class BgPauseManager : MonoBehaviour
 
     public void OnRestart()
     {
-        // Require return to Menu on RestartButton click
+        PlayerPrefs.DeleteKey("FinalScore");
+        PlayerPrefs.DeleteKey("FinalCoins");
+        PlayerPrefs.DeleteKey("FinalScrap");
+        GameManager.ClearSavedCoins();
+        GunShop.ClearSavedUnlocks();
+        WeaponManager.ClearSavedEquippedGun();
+
         Time.timeScale = 1f;
-        UnityEngine.SceneManagement.SceneManager.LoadScene("Menu");
+        string lastLevel = PlayerPrefs.GetString("LastLevel", "Level1");
+        UnityEngine.SceneManagement.SceneManager.LoadScene(lastLevel);
     }
 }

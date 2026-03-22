@@ -169,7 +169,22 @@ public class AutoGun : MonoBehaviour
     {
         Vector2 dir = (target.position - transform.position).normalized;
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+        angle += GetAimAngleOffset();
         transform.rotation = Quaternion.Euler(0, 0, angle);
+    }
+
+    float GetAimAngleOffset()
+    {
+        if (gunData == null || string.IsNullOrEmpty(gunData.gunName))
+            return 0f;
+
+        string name = gunData.gunName;
+        if (name.IndexOf("Shotgun", StringComparison.OrdinalIgnoreCase) >= 0)
+            return 180f;
+        if (name.IndexOf("Sniper", StringComparison.OrdinalIgnoreCase) >= 0)
+            return 180f;
+
+        return 0f;
     }
 
     void Fire()
@@ -180,8 +195,14 @@ public class AutoGun : MonoBehaviour
             return;
         }
 
-        Vector3 spawnPos = muzzlePosition != null ? muzzlePosition.position : transform.position;
-        Quaternion baseRot = muzzlePosition != null ? muzzlePosition.rotation : transform.rotation;
+        Vector3 aimDirection = (currentTarget != null)
+            ? (currentTarget.position - transform.position).normalized
+            : transform.right;
+        if (aimDirection.sqrMagnitude < 0.0001f)
+            aimDirection = transform.right;
+
+        Vector3 spawnPos = ResolveMuzzleSpawnPosition(aimDirection);
+        Quaternion baseRot = Quaternion.FromToRotation(Vector3.right, aimDirection);
 
         if (gunData.bulletsPerShot <= 1)
         {
@@ -207,16 +228,56 @@ public class AutoGun : MonoBehaviour
             AudioManager.Instance.PlayShoot(gunData.shootSFX);
     }
 
+    Vector3 ResolveMuzzleSpawnPosition(Vector3 aimDirection)
+    {
+        Vector3 fallback = transform.position;
+        Vector3 dir = aimDirection.sqrMagnitude > 0.0001f ? aimDirection.normalized : transform.right;
+
+        // Candidate A: manually placed muzzle transform (if present)
+        Vector3 muzzleCandidate = muzzlePosition != null ? muzzlePosition.position : fallback;
+
+        // Candidate B/C: both sprite endpoints along local X, then choose front-most by aim direction.
+        Vector3 tipCandidate = fallback;
+        if (gunRenderer != null && gunRenderer.sprite != null)
+        {
+            Bounds localBounds = gunRenderer.sprite.bounds;
+            Vector3 localTipA = new Vector3(localBounds.max.x, 0f, 0f);
+            Vector3 localTipB = new Vector3(localBounds.min.x, 0f, 0f);
+
+            Vector3 worldTipA = gunRenderer.transform.TransformPoint(localTipA);
+            Vector3 worldTipB = gunRenderer.transform.TransformPoint(localTipB);
+
+            float dotA = Vector3.Dot(worldTipA - fallback, dir);
+            float dotB = Vector3.Dot(worldTipB - fallback, dir);
+            tipCandidate = dotA >= dotB ? worldTipA : worldTipB;
+        }
+
+        // Always pick the point farther in the shooting direction to avoid spawning from stock.
+        float muzzleDot = Vector3.Dot(muzzleCandidate - fallback, dir);
+        float tipDot = Vector3.Dot(tipCandidate - fallback, dir);
+        return tipDot > muzzleDot ? tipCandidate : muzzleCandidate;
+    }
+
     void SpawnBullet(Vector3 pos, Quaternion baseRot, float angleOffset)
     {
         Quaternion rot = baseRot * Quaternion.Euler(0, 0, angleOffset);
         GameObject bulletObj = Instantiate(gunData.bulletPrefab, pos, rot);
 
+        if (gunData.bulletSprite != null)
+        {
+            SpriteRenderer bulletRenderer = bulletObj.GetComponentInChildren<SpriteRenderer>();
+            if (bulletRenderer != null)
+                bulletRenderer.sprite = gunData.bulletSprite;
+        }
+
         Bullet bullet = bulletObj.GetComponent<Bullet>();
         if (bullet != null)
         {
+            Vector2 bulletDir = (rot * Vector3.right).normalized;
+            bullet.direction = bulletDir;
             bullet.damage = Mathf.RoundToInt(gunData.damage * damageMultiplier);
             bullet.speed  = gunData.bulletSpeed;
+            bullet.lifeTime = gunData.bulletLifeTime;
         }
     }
 

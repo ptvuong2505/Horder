@@ -83,11 +83,19 @@ public class Player : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
-        //currentHealth = maxHealth;
+
+        // Fallback an toàn: nếu chưa được Initialize từ PlayerData,
+        // đảm bảo player luôn bắt đầu với HP hợp lệ.
+        if (currentHealth <= 0 || currentHealth > maxHealth)
+            currentHealth = maxHealth;
     }
 
     void Start()
     {
+        // Guard lần cuối trong trường hợp thứ tự khởi tạo khiến HP bị 0.
+        if (currentHealth <= 0 || currentHealth > maxHealth)
+            currentHealth = maxHealth;
+
         // Gửi HP ban đầu cho HealthBar
         OnHealthChanged?.Invoke(currentHealth, maxHealth);
     }
@@ -135,6 +143,7 @@ public class Player : MonoBehaviour
 
         animator.SetTrigger("hit");
         currentHealth -= damage;
+        currentHealth = Mathf.Max(0, currentHealth);
 
         // SFX player bị đánh
         if (AudioManager.Instance != null)

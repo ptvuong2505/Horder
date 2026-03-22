@@ -13,6 +13,7 @@ public class Bullet : MonoBehaviour
 {
     public float speed = 12f;
     public float lifeTime = 2f;
+    public Vector2 direction = Vector2.right;
 
     // damage có thể set khác nhau cho từng loại súng / prefab
     public int damage = 10;
@@ -24,7 +25,8 @@ public class Bullet : MonoBehaviour
 
     void Update()
     {
-        transform.position += transform.right * speed * Time.deltaTime;
+        Vector2 dir = direction.sqrMagnitude > 0.0001f ? direction.normalized : (Vector2)transform.right;
+        transform.position += (Vector3)(dir * speed * Time.deltaTime);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

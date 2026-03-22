@@ -225,17 +225,18 @@ public class GunShopUI : MonoBehaviour
         // HUD always visible: Current weapon text (outside shop panel)
         currentWeaponHudText = TMP("CurrentWeaponHUD", cv.transform, "Weapon: -", 20, FontStyles.Bold, Color.white);
         var wRT = currentWeaponHudText.GetComponent<RectTransform>();
-        wRT.anchorMin = wRT.anchorMax = new Vector2(0, 1);
-        wRT.pivot = new Vector2(0, 1);
-        wRT.anchoredPosition = new Vector2(24, -24);
+        wRT.anchorMin = wRT.anchorMax = new Vector2(0, 0);
+        wRT.pivot = new Vector2(0, 0);
+        wRT.anchoredPosition = new Vector2(24, 24);
         wRT.sizeDelta = new Vector2(520, 40);
         currentWeaponHudText.alignment = TextAlignmentOptions.MidlineLeft;
 
-        // Panel center
-        int cnt = 4; // so luong slot toi da
-        float cW = 190f, cH = 280f, gap = 14f, pad = 28f;
-        float W = cnt * cW + (cnt - 1) * gap + pad * 2;
-        float H = cH + 135f;
+        // Panel center (grid 4x2)
+        int cols = 4;
+        int rows = 2;
+        float cW = 180f, cH = 240f, gap = 14f, pad = 28f;
+        float W = cols * cW + (cols - 1) * gap + pad * 2;
+        float H = rows * cH + (rows - 1) * gap + 180f;
         GameObject panel = NewUI("Panel", shopPanel.transform);
         Center(panel, W, H); Img(panel, CP);
 
@@ -259,11 +260,18 @@ public class GunShopUI : MonoBehaviour
         GameObject area = NewUI("Cards", panel.transform);
         cardArea = area.transform;
         var aRT = area.GetComponent<RectTransform>();
-        aRT.anchorMin = new Vector2(0,0); aRT.anchorMax = new Vector2(1,0);
-        aRT.pivot = new Vector2(0.5f,0);
-        aRT.offsetMin = new Vector2(pad, pad); aRT.offsetMax = new Vector2(-pad, pad + cH);
-        var hlg = area.AddComponent<HorizontalLayoutGroup>();
-        hlg.spacing = gap; hlg.childForceExpandWidth = hlg.childForceExpandHeight = true;
+        aRT.anchorMin = new Vector2(0, 0);
+        aRT.anchorMax = new Vector2(1, 1);
+        aRT.offsetMin = new Vector2(pad, pad);
+        aRT.offsetMax = new Vector2(-pad, -130f);
+
+        var grid = area.AddComponent<GridLayoutGroup>();
+        grid.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
+        grid.constraintCount = cols;
+        grid.cellSize = new Vector2(cW, cH);
+        grid.spacing = new Vector2(gap, gap);
+        grid.childAlignment = TextAnchor.UpperCenter;
+        grid.startAxis = GridLayoutGroup.Axis.Horizontal;
 
         // Cards built in Start() once GunShop.Instance is ready
 
@@ -419,8 +427,8 @@ public class GunShopUI : MonoBehaviour
         if (!shouldShowWeaponHud) return;
 
         currentWeaponHudText.text = data != null
-            ? $"Weapon: {data.gunName}  |  Keys: 1-4"
-            : "Weapon: None  |  Keys: 1-4";
+            ? $"Weapon: {data.gunName}  |  Keys: 1/5 2/6 3/7 4/8"
+            : "Weapon: None  |  Keys: 1/5 2/6 3/7 4/8";
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────

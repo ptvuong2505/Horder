@@ -128,7 +128,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41d6d2a1fa6f8014e899c5ed118a2597, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Boss2Enemy
-  maxHealth: 1200
+  maxHealth: 3000
   moveSpeed: 1.6
   contactDamage: 20
   target: {fileID: 0}

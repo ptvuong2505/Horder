@@ -110,8 +110,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fce9c0b16b0d3a24e9ca40cbd577dd65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
-  maxHealth: 200
-  speed: 3
+  maxHealth: 1000
+  speed: 4
   damageToPlayer: 10
 --- !u!1 &5263340361090961652
 GameObject:
@@ -379,7 +379,7 @@ Animator:
   m_GameObject: {fileID: 8327152157187369808}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: b19544f24c790cb40a529a504674a2ce, type: 2}
+  m_Controller: {fileID: 9100000, guid: 704aa5eed25a235489dd2ca262d3793d, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

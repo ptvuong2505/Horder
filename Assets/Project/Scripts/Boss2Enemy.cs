@@ -158,10 +158,10 @@ public class Boss2Enemy : MonoBehaviour
         if (EnemyManager.Instance != null)
             EnemyManager.Instance.RegisterEnemy(gameObject);
 
-        // BossHealthBar hiện tại chỉ hỗ trợ `BossEnemy`.
-        // Nếu bạn muốn Boss2 cũng hiển thị thanh máu boss, có 2 hướng:
-        // 1) Mở rộng BossHealthBar để nhận một interface/event tổng quát, hoặc
-        // 2) Tạo một Boss2HealthBar riêng.
+        // Báo cho BossHealthBar hiển thị (Boss2)
+        BossHealthBar hpBar = FindFirstObjectByType<BossHealthBar>(FindObjectsInactive.Include);
+        if (hpBar != null)
+            hpBar.RegisterBoss(this);
 
         OnHealthChanged?.Invoke(currentHealth, maxHealth);
 

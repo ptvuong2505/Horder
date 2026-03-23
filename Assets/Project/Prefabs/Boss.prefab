@@ -179,8 +179,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e896d6f3c03ab74984d8a56b286d085, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BossEnemy
-  maxHealth: 800
-  moveSpeed: 1.2
+  maxHealth: 2000
+  moveSpeed: 3
   contactDamage: 15
   projectilePrefab: {fileID: 2561717188729887781, guid: 70ef77b210564294d86be51927ffe275, type: 3}
   bulletsPerBurst: 12

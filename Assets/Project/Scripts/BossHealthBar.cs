@@ -1,11 +1,13 @@
 using UnityEngine;
 using UnityEngine.UI;
+
 public class BossHealthBar : MonoBehaviour
 {
     [Header("UI References")]
     public Image fillImage;
 
     private BossEnemy currentBoss;
+    private Boss2Enemy currentBoss2;
 
     void Awake()
     {
@@ -20,11 +22,7 @@ public class BossHealthBar : MonoBehaviour
     {
         if (boss == null) return;
 
-        if (currentBoss != null)
-        {
-            currentBoss.OnHealthChanged -= UpdateFill;
-            currentBoss.OnBossDied -= OnBossDied;
-        }
+        UnregisterAll();
 
         currentBoss = boss;
         currentBoss.OnHealthChanged += UpdateFill;
@@ -32,6 +30,40 @@ public class BossHealthBar : MonoBehaviour
 
         gameObject.SetActive(true);
         UpdateFill(boss.maxHealth, boss.maxHealth);
+    }
+
+    /// <summary>
+    /// Gọi từ Boss2Enemy.Start() khi boss2 vừa spawn.
+    /// </summary>
+    public void RegisterBoss(Boss2Enemy boss)
+    {
+        if (boss == null) return;
+
+        UnregisterAll();
+
+        currentBoss2 = boss;
+        currentBoss2.OnHealthChanged += UpdateFill;
+        currentBoss2.OnBossDied += OnBossDied;
+
+        gameObject.SetActive(true);
+        UpdateFill(boss.maxHealth, boss.maxHealth);
+    }
+
+    private void UnregisterAll()
+    {
+        if (currentBoss != null)
+        {
+            currentBoss.OnHealthChanged -= UpdateFill;
+            currentBoss.OnBossDied -= OnBossDied;
+            currentBoss = null;
+        }
+
+        if (currentBoss2 != null)
+        {
+            currentBoss2.OnHealthChanged -= UpdateFill;
+            currentBoss2.OnBossDied -= OnBossDied;
+            currentBoss2 = null;
+        }
     }
 
     void UpdateFill(int current, int max)
@@ -51,12 +83,7 @@ public class BossHealthBar : MonoBehaviour
 
     void OnBossDied()
     {
-        if (currentBoss != null)
-        {
-            currentBoss.OnHealthChanged -= UpdateFill;
-            currentBoss.OnBossDied -= OnBossDied;
-            currentBoss = null;
-        }
+        UnregisterAll();
         Invoke(nameof(HideBar), 2f);
     }
 
@@ -67,10 +94,6 @@ public class BossHealthBar : MonoBehaviour
 
     void OnDestroy()
     {
-        if (currentBoss != null)
-        {
-            currentBoss.OnHealthChanged -= UpdateFill;
-            currentBoss.OnBossDied -= OnBossDied;
-        }
+        UnregisterAll();
     }
 }

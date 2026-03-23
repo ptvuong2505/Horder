@@ -3,13 +3,17 @@ using UnityEngine.UI;
 
 /// <summary>
 /// StaminaBarUI
-/// Thanh stamina (dash) đơn giản hiển thị ngay dưới HP.
+/// Thanh "stamina" trước đây, hiện được tái sử dụng để hiển thị trạng thái Dash.
+/// 
+/// Lý do:
+/// - DashController2D đã bỏ cơ chế stamina.
+/// - UI này đổi sang hiển thị "cooldown của dash" (càng đầy nghĩa là càng sẵn sàng dash).
 /// 
 /// Cách dùng:
 /// - Tạo 1 UI Image (Fill) dạng thanh ngang nhỏ.
 /// - Gán vào field fillImage.
 /// - Gán player (hoặc để trống, script sẽ tự tìm theo tag Player).
-/// - Script sẽ lấy DashController2D trên Player và cập nhật fillAmount theo StaminaNormalized.
+/// - Script sẽ lấy DashController2D trên Player và cập nhật fill theo cooldown.
 /// </summary>
 public class StaminaBarUI : MonoBehaviour
 {
@@ -71,7 +75,12 @@ public class StaminaBarUI : MonoBehaviour
             return;
         }
 
-        UpdateUI(dash.StaminaNormalized);
+        // Dash không còn stamina, nên thanh này hiển thị "mức sẵn sàng" dựa trên cooldown:
+        // - CooldownRemaining = 0 => sẵn sàng dash => hiển thị 100%
+        // - CooldownRemaining gần = dashCooldown => vừa dash => hiển thị thấp
+        float denom = Mathf.Max(0.0001f, dash.dashCooldown);
+        float normalizedReady = 1f - Mathf.Clamp01(dash.CooldownRemaining / denom);
+        UpdateUI(normalizedReady);
     }
 
     private void ResolveReferences()

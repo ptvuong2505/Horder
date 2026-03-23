@@ -68,6 +68,13 @@ public class PauseManager : MonoBehaviour
     /// </summary>
     public void RestartGame()
     {
+        PlayerPrefs.DeleteKey("FinalScore");
+        PlayerPrefs.DeleteKey("FinalCoins");
+        PlayerPrefs.DeleteKey("FinalScrap");
+        GameManager.ClearSavedCoins();
+        GunShop.ClearSavedUnlocks();
+        WeaponManager.ClearSavedEquippedGun();
+
         isPaused = false;
         Time.timeScale = 1f;
         SceneManager.LoadScene(gameSceneName);

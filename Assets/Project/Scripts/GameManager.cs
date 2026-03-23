@@ -56,8 +56,11 @@ public class GameManager : MonoBehaviour
     // ──────────────────────────────────────────────
     private int currentWave = 0;
     public int CurrentWave => currentWave;
-    public int TotalWaves => enemySpawner != null ? enemySpawner.TotalWaves : 0;
+    public int TotalWaves => enemySpawner != null
+        ? enemySpawner.TotalWaves
+        : (levelConfig != null ? levelConfig.waves.Count : 0);
     public event Action<int, int> OnWaveChanged;   // (currentWave, totalWaves)
+    private int lastObservedWaveIndex = -2;
 
     // ──────────────────────────────────────────────
     //  Game State
@@ -84,6 +87,12 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        if (enemySpawner == null)
+            enemySpawner = FindFirstObjectByType<EnemySpawner>();
+
+        if (levelConfig == null && enemySpawner != null)
+            levelConfig = enemySpawner.levelConfig;
+
         // Player xuat hien mac dinh khi sence chay
         Player player = FindObjectOfType<Player>();
 
@@ -104,10 +113,26 @@ public class GameManager : MonoBehaviour
             enemySpawner.OnWaveStarted += HandleWaveStarted;
             enemySpawner.OnAllWavesCompleted += HandleAllWavesCompleted;
         }
+        else
+        {
+            Debug.LogWarning("[GameManager] Không tìm thấy EnemySpawner để theo dõi wave.");
+        }
         // EnemySpawner tự Start() → không cần gọi StartNextWave() ở đây
 
         // Đồng bộ UI coin ngay khi vào scene (coin có thể đã được load từ PlayerPrefs)
         OnCoinsChanged?.Invoke(coins);
+
+        // Đồng bộ UI wave ngay khi vào scene.
+        OnWaveChanged?.Invoke(currentWave, TotalWaves);
+
+        // Nếu EnemySpawner đã bắt đầu wave trước khi GameManager kịp subscribe,
+        // đồng bộ lại ngay để tránh UI kẹt 0/x.
+        ForceSyncWaveFromSpawner();
+    }
+
+    void Update()
+    {
+        SyncWaveFromSpawnerIfChanged();
     }
 
     void OnDestroy()
@@ -134,10 +159,39 @@ public class GameManager : MonoBehaviour
     void HandleWaveStarted(int waveIndex)
     {
         currentWave = waveIndex + 1;  // Hiển thị từ 1
+        lastObservedWaveIndex = waveIndex;
         state = GameState.Playing;
         OnWaveChanged?.Invoke(currentWave, TotalWaves);
         OnStateChanged?.Invoke(state);
         Debug.Log($"[GameManager] Wave {currentWave}/{TotalWaves} bắt đầu!");
+    }
+
+    void SyncWaveFromSpawnerIfChanged()
+    {
+        if (enemySpawner == null) return;
+
+        int spawnerWaveIndex = enemySpawner.CurrentWaveIndex;
+        if (spawnerWaveIndex < 0) return;
+        if (spawnerWaveIndex == lastObservedWaveIndex) return;
+
+        // Spawner đã đổi wave nhưng event có thể đã lỡ trong frame khởi tạo.
+        currentWave = spawnerWaveIndex + 1;
+        lastObservedWaveIndex = spawnerWaveIndex;
+        OnWaveChanged?.Invoke(currentWave, TotalWaves);
+
+        if (state != GameState.GameOver && state != GameState.LevelClear)
+        {
+            state = GameState.Playing;
+            OnStateChanged?.Invoke(state);
+        }
+
+        Debug.Log($"[GameManager] Sync wave from spawner: {currentWave}/{TotalWaves}");
+    }
+
+    void ForceSyncWaveFromSpawner()
+    {
+        lastObservedWaveIndex = -2;
+        SyncWaveFromSpawnerIfChanged();
     }
 
     // ──────────────────────────────────────────────

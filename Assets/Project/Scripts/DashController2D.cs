@@ -9,11 +9,12 @@ using UnityEngine.InputSystem;
 /// Cách hoạt động:
 /// - Nhấn Dash (gợi ý bind: Shift hoặc Space) để lao nhanh theo hướng đang di chuyển.
 /// - Trong thời gian dash: set Rigidbody2D velocity mạnh, có thể bật "invulnerable".
-/// - Có cooldown + (tuỳ chọn) stamina/charges.
+/// - Có cooldown.
 /// 
 /// Cách gắn:
 /// - Add component này lên Player cùng với Rigidbody2D.
-/// - Với Input System: tạo action "Dash" (Button) rồi trỏ event về hàm OnDash(...).
+/// - Với Input System: tạo action "Dash" (Button) rồi trỏ event về hàm OnDash(...),
+///   hoặc gán action Sprint hiện tại về OnSprint(...).
 /// </summary>
 [RequireComponent(typeof(Rigidbody2D))]
 public class DashController2D : MonoBehaviour
@@ -32,35 +33,14 @@ public class DashController2D : MonoBehaviour
     [Tooltip("Nếu true, Player sẽ không nhận damage trong lúc dash.")]
     public bool invulnerableDuringDash = true;
 
-    [Header("Stamina")]
-    [Tooltip("Stamina tối đa. Dash sẽ tiêu tốn staminaDashCost mỗi lần.")]
-    public float staminaMax = 100f;
-
-    [Tooltip("Stamina hiện tại (runtime).")]
-    public float stamina = 100f;
-
-    [Tooltip("Stamina tiêu tốn mỗi lần dash.")]
-    public float staminaDashCost = 35f;
-
-    [Tooltip("Tốc độ hồi stamina mỗi giây.")]
-    public float staminaRegenPerSecond = 30f;
-
-    [Tooltip("Trễ hồi stamina sau khi dash (giây).")]
-    public float staminaRegenDelayAfterDash = 0.25f;
-
-    private float lastDashTime;
-
-    /// <summary>
-    /// Stamina (0..1) để UI hiển thị thanh.
-    /// </summary>
-    public float StaminaNormalized => staminaMax <= 0 ? 0f : Mathf.Clamp01(stamina / staminaMax);
-
     // State
     private Rigidbody2D rb;
     private Player player;
     private bool dashQueued;
     private bool isDashing;
     private float nextDashTime;
+
+    public GameObject dashEffectObject; // (tùy chọn) prefab hiệu ứng dash, có thể gán qua Inspector hoặc load từ Resources.
 
     // Hướng dash: ưu tiên hướng move hiện tại; nếu đứng yên thì dash theo hướng nhìn (fallback).
     private Vector2 lastMoveDir = Vector2.right;
@@ -69,20 +49,10 @@ public class DashController2D : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         player = GetComponent<Player>();
-
-        // Ensure stamina khởi tạo đúng.
-        staminaMax = Mathf.Max(1f, staminaMax);
-        stamina = Mathf.Clamp(stamina, 0f, staminaMax);
     }
 
     private void Update()
     {
-        // Regen stamina (không regen ngay lập tức sau dash).
-        if (!isDashing && Time.time >= lastDashTime + staminaRegenDelayAfterDash)
-        {
-            stamina = Mathf.Min(staminaMax, stamina + staminaRegenPerSecond * Time.deltaTime);
-        }
-
         // Lấy hướng di chuyển từ Rigidbody velocity.
         // (Cách này không phụ thuộc vào việc Player lưu moveInput là private.)
         Vector2 v = rb != null ? rb.linearVelocity : Vector2.zero;
@@ -120,24 +90,22 @@ public class DashController2D : MonoBehaviour
     {
         if (isDashing) return;
 
-        // Giữ cooldown như một "anti-spam" nhỏ, nhưng stamina mới là giới hạn chính.
+        // Cooldown chống spam.
         if (Time.time < nextDashTime) return;
 
         // Nếu player đã chết thì không dash.
         // (Player.dead là private, nên check bằng HP hoặc state khác; ở đây dùng currentHealth > 0.)
         if (player != null && player.currentHealth <= 0) return;
 
-        // Không đủ stamina thì không dash.
-        if (stamina < staminaDashCost) return;
+        if (dashEffectObject != null)
+            dashEffectObject.SetActive(true); // (tùy chọn) kích hoạt hiệu ứng dash nếu có.
 
-        stamina -= staminaDashCost;
         StartCoroutine(DashRoutine(lastMoveDir));
     }
 
     private IEnumerator DashRoutine(Vector2 dir)
     {
         isDashing = true;
-        lastDashTime = Time.time;
         nextDashTime = Time.time + dashCooldown;
 
         Vector2 preDashVelocity = rb != null ? rb.linearVelocity : Vector2.zero;
@@ -157,9 +125,13 @@ public class DashController2D : MonoBehaviour
         if (invulnerableDuringDash && player != null)
             player.invulnerable = false;
 
-        // Trả lại một phần velocity trước đó để cảm giác không bị "khựng".
+        // Trả lại velocity trước đó để cảm giác không bị "khựng".
         if (rb != null)
             rb.linearVelocity = preDashVelocity;
+
+        // Tắt hiệu ứng ngay khi dash kết thúc.
+        if (dashEffectObject != null)
+            dashEffectObject.SetActive(false);
 
         isDashing = false;
     }

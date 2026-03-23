@@ -13,6 +13,7 @@ public class GunData : ScriptableObject
 
     [Header("Bullet")]
     public GameObject bulletPrefab;       // Prefab đạn riêng cho từng khẩu
+    public Sprite bulletSprite;           // Sprite đạn override theo súng (nếu để trống dùng sprite prefab)
     public int damage = 10;
     public float bulletSpeed = 12f;
     public float bulletLifeTime = 2f;
